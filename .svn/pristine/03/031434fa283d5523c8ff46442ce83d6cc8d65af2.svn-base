@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>订单记录</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+</head>
+
+<body>
+    <section class="aui-content aui-border-b">
+        <div class="aui-content">
+            <div id="manage_order">
+                <div v-for="v in it" :key="v.id" style="margin: 5px 15px;">
+                    <div class="" v-text="v.trxtime" style="max-width: 100%; width: 100% !important; text-align: center !important;"></div>
+                    <div style="border-radius: 10px; width: 100% !important; background-color: #fff; padding: 5px 20px;">
+                        <span style="width: 15%; display: inline-block;">单号</span><span style="width: 5%; display: inline-block;">:</span><span v-text="v.id"></span><br>
+                        <div v-if="v.remark==''||v.remark==null">
+                            <span style="width: 15%; display: inline-block;">称呼</span><span style="width: 5%; display: inline-block;">:</span><span v-text="v.nickname"></span><br>
+                        </div>
+                        <div v-if="v.remark!=''&&v.remark!=null">
+                            <span style="width: 15%; display: inline-block;">说明</span><span style="width: 5%; display: inline-block;">:</span><span v-text="v.remark"></span><br>
+                        </div>
+                       
+                        <span style="width: 15%; display: inline-block;">金额</span><span style="width: 5%; display: inline-block;">:</span><span v-text="v.amount"></span><br>
+                        <span style="width: 15%; display: inline-block;">状态</span><span style="width: 5%; display: inline-block;">:</span><span :id="'status'+v.id" v-text="v.status" style="color: red;"></span><br>
+                        <span style="width: 100%; display: inline-block; text-align: justify;">为保证您的权益，茶妹无法直接获得订单金币，系统会冻结订单金币48小时；您确认订单后金币才会到茶妹账户</span><br>
+                        <div :id="'btngroup'+v.id" style="width: 100%; text-align: right;" v-if="v.status=='进行中'">
+                            <button type="button" class="aui-btn aui-btn-success" tapmode @click="process(v.id, '已完成')" style="border-radius:1rem">确认订单</button>
+                            <button type="button" class="aui-btn aui-btn-danger" tapmode @click="process(v.id, '退单')" style="border-radius:1rem">退单</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript " src="../script/toast.js "></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    var $selectedRowid;
+    var $action;
+
+    apiready = function() {
+        var toast = new auiToast();
+        var manage_order = new Vue({
+            el: '#manage_order',
+            data: {
+                it: []
+            },
+            mounted: function() {
+                $api.get('my/order_girl_log', function(json) {
+                    manage_order.it = json;
+                });
+            },
+            methods: {
+            process: function(orderid, status){
+                $api.post('my/change_order_status', {
+                    rowid: orderid,
+                    status: status
+                }, function(){
+                    toast.success({title: '状态更新成功'});
+                    $("#btngroup" + orderid).remove();
+                    if (status == '已完成'){
+                        $("#status" + orderid).text('完成');
+                    } else if (status == '退单') {
+                        $("#status" + orderid).text('退款中');
+                    }
+                    api.sendEvent({name: 'logout'});
+                }, function(data){
+                    toast.fail({title: data.msg});
+                });
+            }
+        }
+        });
+    }
+</script>
+
+</html>

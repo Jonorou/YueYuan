@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>提现记录</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        .separator {
+            border: 0;
+            clear:both;
+            display:block;
+            width: 100%;
+            background-color:lightgray;
+            height: 2px;
+            margin-bottom: 15px;
+        }
+
+        .withdraw-label {
+            font-size: 12pt; 
+            line-height: 14px;
+            margin-bottom: 5px;
+            vertical-align: middle;
+        }
+
+        .withdraw-border {
+            border: 1px solid gray;
+            padding: 0.5rem 0.5rem;
+            box-shadow: 3px 6px #888888;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content aui-border-b">
+        <ul class="aui-list aui-media-list" id="withdraw" v-cloak>
+            <li v-for="v in it" class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row aui-row-padded withdraw-border">
+                        <div style="float: right; color: gray; vertical-align: middle; line-height: 1.3rem;" v-text="v.createdtime"></div>
+                        <div style="font-size: 14pt;" v-if="v.status == 2">
+                            <b>提现已驳回</b>
+                        </div>
+                        <div style="font-size: 14pt;" v-if="v.status == 1">
+                            <b>零钱提现成功</b>
+                        </div>
+                        <div style="font-size: 14pt;" v-if="v.status == 0">
+                            <b>审核中</b>
+                        </div>
+                        <div class="separator"></div>
+                        <div style="font-size: 22pt; float: right; margin-top: -15px;" v-text="v.amount"></div>
+                        <div class="withdraw-label">提现金额</div>
+                        <div  v-if="v.status == 2" class="separator"></div>
+                        <div v-if="v.status == 2" style="font-size: 14pt; float: right; margin-top: -8px;" v-text="v.rejectreason"></div>
+                        <div v-if="v.status == 2" class="withdraw-label">驳回理由</div>
+                        
+                        <!-- <div v-if="v.status == 2" style="font-size: 14pt; clear: both;" v-text="v.rejectreason"></div> -->
+                        <!-- <p class="aui-col-xs-4 aui-text-center aui-font-size-12" v-text=""></p>
+                        <p class="aui-col-xs-4 aui-text-center" v-text="'￥'+parseFloat(v.amount)"></p>
+                        <p class="aui-col-xs-4 aui-text-center">
+                            <span v-if="v.status == 0" class="aui-text-danger">审核中</span>
+                            <span v-else-if="v.status == 1" class="aui-text-primary">已提现</span>
+                            <span v-else>提现失败</span>
+                        </p> -->
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var withdraw = new Vue({
+            el: '#withdraw',
+            data: {
+                it: []
+            },
+            mounted: function() {
+                $api.get('my/withdraw_log', function(json) {
+                    withdraw.it = json;
+                });
+            },
+        });
+    }
+</script>
+
+</html>

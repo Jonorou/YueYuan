@@ -1,0 +1,348 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>平台使用规范</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .user-info {
+            background-color: #ffffff;
+            padding: 0.75rem 0;
+        }
+        
+        img.avatar {
+            display: block;
+            margin: 0 auto;
+            width: 20%;
+        }
+        
+        .aui-list .aui-list-item {
+            min-height: 3rem;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="app" v-cloak>
+        <div class="aui-content user-info aui-margin-b-15" style="text-align: justify !important; padding: 3px 15px;">
+            <div class="aui-row aui-margin-t-15">
+                <div class="aui-list-item">
+                    为维护积目健康生态秩序,更好地保障用户合法权益及良好的用户体验,(以下简称我司)根据现行法律法规及《积目用户协议),制定《积目平台使用规范》。将依据本规范对所有用户的行为进行约束和管理,并对违规行为进行相应处理,请勿做出以下违规行为:
+                </div>
+            </div>
+            <div class="aui-row aui-margin-t-15">
+                <table>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>一、进行反党反政府或损害国家利益的行为,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.1</td>
+                        <td>违反宪法确定的基本原则的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.2</td>
+                        <td>危害国家安全、泄露国家秘密、颠覆国家政权坏国家统一的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.3</td>
+                        <td>损害国家荣誉和利益的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.4</td>
+                        <td>煽动民族仇恨、民族歧视、破坏民族团结的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.5</td>
+                        <td>破坏国家宗教政策、宣扬邪教和封建迷信的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.6</td>
+                        <td>散布遥言、扰乱社会秩序、坏社会稳定的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.7</td>
+                        <td>散布暴力、恐怖或者教竣犯罪的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.8</td>
+                        <td>煽动非法集会、结杜、游行、示威、聚众扰乱社会秩序的;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.9</td>
+                        <td>以任何形式讨论、评论、曲解、调侃历史性或政治性国家事件,以及时事政治内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.10</td>
+                        <td>以任何形式悬佳、展示、丑化、更改等方式展现党旗、国旗、军旗、共青团团旗、队旗等标志性旗帜;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.11</td>
+                        <td>以任何形式表演簒改、、贬损方式奏、国际歌、解放军军歌共团团少队队歌汉及歌唱抗日争、解放战争等艰苦时期、革命士等严肃歌曲的行为;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.12</td>
+                        <td>以任何形式模仿、诋毁、中伤国家公职人员形象。不得出现任何损害人民公仆形象行为或言论。不得出现误导、调侃英雄烈士、人民公仆的行为或言论;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">1.13</td>
+                        <td>其他任何反党反政府或损害国家利益的行为或言</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>二、传播任何涉及色情或与色情擦边的内容,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">2.1</td>
+                        <td>传播淫秽、低俗的网站链接或二维码;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">2.2</td>
+                        <td>发布与色情或色情擦边的图文信息或直播表演;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">2.3</td>
+                        <td>传播侵犯他人隐私的走光、偷拍、漏点等信息;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">2.4</td>
+                        <td>发布与寻求、提供色情服务或介绍、贩卖色情信息相关的内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">2.5</td>
+                        <td>售卖成人用品、情趣用品或在视频过程中使用性爱相关作品、自慰道具表演的低俗内容。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>三、传播涉及赌博的信息,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">3.1</td>
+                        <td>组织、宣传、误导用户参与直播间赌博或线下赌博;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">3.2</td>
+                        <td>纵容直播间用户赌博或为用户提供直播间用于赌博;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">3.3</td>
+                        <td>提供赌博工具(如赌博网站的账户密码、线下投注工具);</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">3.4</td>
+                        <td>传授千术器具与技巧、聚众赌博、利红包进行赌博(百家乐、六合彩、牛牛模式、时时彩、地雷模式、红包接龙等)等内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">3.5</td>
+                        <td>为用户提供赌博变现通道或工具、方法等。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>四、传播涉及毒品的信息,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">4.1</td>
+                        <td>展示毒品样品,例如:摇头丸、冰毒等;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">4.2</td>
+                        <td>表演及传播毒品吸食或注射方式;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">4.3</td>
+                        <td>传播、讲解其他涉及毒品的内容。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>五、传播涉暴信息或其他含危险的内容,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.1</td>
+                        <td>宣传暴力组织、暴力活动、说动案内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.2</td>
+                        <td>展示或提供与枪支、炸药、制刀具有关的内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.3</td>
+                        <td>煽动用户吵架、进行线下聚众斗殴等;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.4</td>
+                        <td>发布血腥、暴力、自残、轻生、恐怖、恶心的内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.5</td>
+                        <td>发布含有野生保护动物的买卖内容(捕杀、偷猎、买卖野生动物及相关动物器官);</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.6</td>
+                        <td>发布、寻求买卖人体制品以及代孕等信息与内容的行为(买卖肾、代孕、捐卵、捐精、重金求子等)</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.7</td>
+                        <td>发布替人复仇、收账、教唆自杀,虐待及雇佣,引诱他人从事恐怖、暴力等活动的黑社会性质内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">5.8</td>
+                        <td>其他任何危害自身及他人安全的有关的内容。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>六、传播侵犯第三方知识产权的内容,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">6.1</td>
+                        <td>剽窃他人作品、改他人作品,传播、表演未经合法授权的作品等;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">6.2</td>
+                        <td>未经许可商业目的使用第三方的名称、商号、商标、标注等;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">6.3</td>
+                        <td>来经许可使用第三方享有专利的内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">6.4</td>
+                        <td>传播其他侵犯第三方知识产权的内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">6.5</td>
+                        <td>未经许可,直播或转播电视剧、电影新闻等影视作品;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">6.6</td>
+                        <td>其他侵犯第三方知识产权的行为。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>七、传播侵犯他人人身权的内容,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">7.1</td>
+                        <td>未经当事人同意公开他人姓名、住址、电话等个人资料,进行任何形式的采访与公众进行互动提及他入隐私信息等;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">7.2</td>
+                        <td>恶意发辱骂、侮导他人的内容;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">7.3</td>
+                        <td>恶意诋毁合法经营主体的商誉、信誉等;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">7.4</td>
+                        <td>未经他人授权使用发布他人资料、照片等个人信息的行为;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">7.5</td>
+                        <td>歪曲他人形象、损害他人名誉权等。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>八、以骗取钱财为目的的欺诈行为,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">8.1</td>
+                        <td>骗取话费或产生非正常高消费的行为(话费托、酒托、饭托);</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">8.2</td>
+                        <td>利用红包进行诈骗的行为,如售卖“抢红包外挂带有承诺收到红包后会多倍返还的“红包返利”行为;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">8.3</td>
+                        <td>以交友、约会为幌子的欺诈行为;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">8.4</td>
+                        <td>组织、宣传、诱导用户加入传销(或有传销嫌疑)的机构。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>九、以宣传、售卖为导向的广告行为,包含但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">9.1</td>
+                        <td>发布广告相关信息的内容,如赚钱的找我、加我有福利、进群有福利。具体形式包含但不限于:金融类(微商、信用卡、贷款、保险),医院类(化妆品、整容整形、成人品),物品兜售(数码产品、淘宝店铺);</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">9.2</td>
+                        <td>宣传个人店铺的产品、功效、价格、地址及联系方式的行为,</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">9.3</td>
+                        <td>发布其他平台的会员招募、人员招募兼职招聘等内容。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br><b>十、其他损害官方利益及破坏平台秩序的行为,包括但不限于以下行为:</b></td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.1</td>
+                        <td>冒充官方工作人员、威胁或诈骗用户;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.2</td>
+                        <td>截取或拍摄他人阅后即焚照片;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.3</td>
+                        <td>注册多个平台帐号、指使他人代替帐号认证、非本人使用帐号的行为;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.4</td>
+                        <td>宣传或涉嫌参与买卖积目账号、虚拟币或礼物等;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.5</td>
+                        <td>在个人资料、广播以及直播过程中开第三方平台联系方式;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.6</td>
+                        <td>发布含有暗示他人或引导他人还款的内容(如:信用卡、花呗、借呗、房租等);</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.7</td>
+                        <td>明确的健康交友以外的有偿交友(比如色情交易、指向不明的有偿交友);</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.8</td>
+                        <td>发布涉及未成年人的内容,平台禁止未成年人使用;</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td style="width: 10%;">10.9</td>
+                        <td>使用外或其他方式恶意对悦缘正常运营造成影响的行为。</td>
+                    </tr>
+                    <tr class="aui-list-item">
+                        <td colspan="2"><br>
+                            以上违规行为一经发现,将视情节严重程度对违规用户予以警告、限制帐号权限、永久封号等处理。悦缘作为一家合法规经营的互联网公司,旨在打造健康良好的交友平台。我们欢迎合作伙伴、消费者以及公众监督，如发现平台有违法和不良信息，欢迎大家向我司官方客服举报
+                        </td>
+                    </tr>
+                </table>
+                <div >
+
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                it: {},
+                ok: false,
+                canorder: 0,
+                canchat: 0
+            },
+            created: function() {
+                
+            },
+            mounted: function() {
+               
+            }
+        });
+    }
+</script>
+
+</html>

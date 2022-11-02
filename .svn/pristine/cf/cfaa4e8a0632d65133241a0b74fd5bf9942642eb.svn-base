@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>注册window</title>
+    <link rel="stylesheet" type="text/css" href="css/api.css" />
+    <style>
+        .aui-radio {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .aui-btn.aui-btn-outlined {
+            border-radius: 50px
+        }
+        
+        .aui-list .aui-list-item-right {
+            position: absolute;
+            right: 0;
+            top: 0.25rem;
+        }
+
+        #myVideo {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%; 
+            min-height: 100%;
+            opacity: 0.9;
+        }
+
+        ::-webkit-input-placeholder {
+            color: #fff;
+        }
+        .aui-list-item-input {
+            color: #fff;
+        }
+        .aui-text-default {
+            color: #fff !important;
+        }
+        .white-input {
+            color: #fff !important;
+        }
+    </style>
+</head>
+
+<body class="aui-bg-white">
+    <video autoplay muted loop id="myVideo" controls="false" playsinline>
+        <source src="image/chamei.mp4" type="video/mp4">
+    </video>
+    <header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+        <a class="aui-pull-left aui-btn" onclick="api.closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">注册</div>
+    </header>
+    <section class="aui-content-padded">
+        <ul class="aui-list aui-form-list aui-border-0" style="background-color: transparent !important;">
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon" style="color: white;">
+                        <i class="aui-iconfont aui-icon-mobile aui-font-size-20"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="phone" name="phone" type="tel" placeholder="输入您的手机号" class="white-input">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon" style="color: white;">
+                        <i class="aui-iconfont aui-icon-friendadd aui-font-size-20"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input name="invite" type="text" placeholder="输入邀请码" class="white-input">
+                    </div>
+                    <div class="aui-list-item-right" id="getinvite">
+                        <div class="aui-btn aui-btn-outlined aui-btn-sm white-input">粘贴邀请码</div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon" style="color: white;">
+                        <i class="aui-iconfont aui-icon-safe aui-font-size-20"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input name="code" type="tel" placeholder="输入验证码" class="white-input">
+                    </div>
+                    <div class="aui-list-item-right white-input" id="getcode" onclick="generateCode();">
+                        <div id="btnCode" class="aui-btn aui-btn-outlined aui-btn-sm">获取验证码</div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon" style="color: white;">
+                        <i class="aui-iconfont aui-icon-lock aui-font-size-20"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input name="password" type="password" placeholder="输入8-32位密码" class="white-input">
+                    </div>
+                    <div class="aui-list-item-right" id="see" style="color: white;">
+                        <i class="aui-iconfont aui-icon-attentionfill aui-font-size-20"></i>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <div class="aui-content-padded">
+        <div class="aui-btn aui-btn-info aui-btn-block aui-font-size-20" id="register">下一步</div>
+    </div>
+    <div class="aui-content-padded aui-font-size-14 aui-padded-t-10 white-input">
+        <input class="aui-radio aui-margin-r-10 white-input" type="radio" checked>点击进入表示你已阅读并同意 <a href="#" onclick="APP.openWin(['user_agreement', 'header'], {title: '悦缘用户协议'}, false)" class="aui-text-info">《用户协议》</a>
+    </div>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/lib/app.js"></script>
+<script type="text/javascript" src="script/toast.js"></script>
+<script type="text/javascript" src="script/common.js"></script>
+<script type="text/javascript" src="script/input.js"></script>
+<script type="text/javascript" src="script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var header = $api.byId('header');
+        $api.fixStatusBar(header);
+        var toast = new auiToast();
+        var input = $api.domAll('input');
+
+        //传递手机号
+        var phone = api.pageParam.phone;
+        phone && $api.val(input[0], phone);
+        //绑定验证码事件
+        // sendsms(input[0]);
+        input_fous(input);
+        pwd_see(input[3]);
+        clip_invite(input[1]);
+        //注册
+        var register = $api.byId('register');
+        $api.addEvt(register, 'click', function() {
+            var phone = $api.val(input[0]);
+            var invite = $api.val(input[1]);
+            var code = $api.val(input[2]);
+            var password = $api.val(input[3]);
+
+            if (code == '') {
+                toast.fail({
+                    title: '请输入短信验证码'
+                });
+            } else if (code != $api.getStorage('verificationcode')) {
+                toast.fail({
+                    title: '验证码不正确'
+                });
+
+            } else {
+                if (is_phone(input[0]) && is_invite(input[1]) && is_pwd(input[3])) {
+                    $api.post('login', {
+                        phone: phone,
+                        invite: invite,
+                        code: '1234',
+                        password: password,
+                    }, function(token) {
+                        //登陆
+                        $api.rmStorage('verificationcode');
+                        $api.setStorage('firstapp', true);
+                        $api.setStorage('token', token);
+                        api.sendEvent({
+                            name: 'islogin'
+                        });
+
+                        APP.openWin('userinfo', {
+                            toMain: true
+                        }, true);
+                        setTimeout(function() {
+                            api.closeWin();
+                        }, 1000);
+                    }, function(json) {
+                        toast.fail({
+                            title: json.msg
+                        });
+                    });
+                }
+            }
+        });
+    };
+
+    function generateCode() {
+
+        if ($('#getcode').hasClass('disabled')) {
+            return;
+        }
+
+        $('#getcode').addClass('disabled');
+        var code = getRandomNumberBetween(1000, 9999);
+        $api.setStorage('verificationcode', code);
+        var phone = $("#phone").val();
+
+        //验证码倒计时
+        var i = 59;
+        var timer = window.setInterval(function() {
+            if (i === 0) {
+                window.clearInterval(timer);
+                $("#btnCode").html('获取验证码');
+
+                $('#getcode').removeClass('disabled');
+            } else {
+                $("#btnCode").html(i-- + 's重新发送');
+            }
+        }, 1000);
+        $.ajax({
+            type: "GET",
+            url: "https://api.smsbao.com/sms?u=duanxin321&p=9ae0145a919844a6b7dec7a812facda5&m=" + phone + "&c=【悦缘】您的验证码是" + code + "。如非本人操作，请忽略本短信",
+            async: false,
+            success: function(retObj) {
+
+            }
+        });
+
+        var myVideo = document.getElementById("myVideo");
+        myVideo.controls = false;
+    }
+
+    function getRandomNumberBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+</script>
+
+</html>

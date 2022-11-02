@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人主页</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .user-info {
+            background-color: #ffffff;
+            padding: 0.75rem 0;
+        }
+        
+        img.avatar {
+            display: block;
+            margin: 0 auto;
+            width: 20%;
+        }
+        
+        .aui-list .aui-list-item {
+            min-height: 3rem;
+        }
+        
+        .aui-list .aui-list-item-media {
+            width: 3rem;
+        }
+        
+        .img-list {
+            display: flex;
+            height: 4rem;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .img-list img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="app" v-cloak>
+        <a style="position: absolute; right: 0; z-index: 99;" class="aui-pull-right aui-btn" tapmode @click="APP.openWin(['complaint_girl', 'header'], {title:'匿名举报',girlname:it.username,gid:it.uid, reload: true}, false, {reload: true})">
+            <span class="aui-iconfont aui-icon-comment"></span> <span>匿名举报</span>
+        </a>
+        <div class="aui-content user-info aui-text-center aui-margin-b-15">
+            <img :src="APP.getImgUrl(it.avatar)" class="avatar aui-img-square" onerror="this.src='../image/user_header.jpg'">
+            <h2 class="aui-margin-t-15" v-text="it.username"></h2>
+            <div class="aui-row aui-margin-t-15" style="display: flex !important; justify-content: center !important;">
+                <div class="aui-box-item" v-text="it.city"></div>
+                <div class="aui-box-item" v-text="it.age"></div>
+                <div class="aui-box-item" v-text="it.job"></div>
+                <!-- <div class="aui-col-xs-6 aui-text-right aui-border-r aui-padded-r-10">
+                    关注 <span class="aui-text-danger" v-text="it.follow"></span> 人
+                </div>
+                <div class="aui-col-xs-6 aui-text-left aui-padded-l-10">
+                    被关注 <span class="aui-text-danger" v-text="it.followed"></span> 人
+                </div> -->
+            </div>
+            <div class="aui-row aui-margin-t-15" style="display: flex !important; justify-content: center !important;">
+                <div class="aui-box-item" v-text="'编号'+it.randomid"></div>
+            </div>
+        </div>
+        <div class="aui-content">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item" tapmode @click="APP.openWin(['toutiao_ta', 'header'], {title: 'TA的广播', uid:it.uid, frame:'toutiao'})">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <!-- <div class="aui-list-item-title">发布的视频</div> -->
+                        <div class="aui-list-item-title">TA的广播</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <br>
+
+        <div class="aui-content" v-if="it.album">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-header">TA的相册</li>
+                <li>
+                    <div class="aui-list-item-text" v-if="it.album">
+                        <div class="aui-row-padded">
+                            <div v-if="it.album.split(',').length > 1" class="aui-col-xs-3 img-list" v-for="(img,i) in it.album.split(',')" :key="i">
+                                <img v-if="img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase() !='mp4' && img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase()!='mov' && img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase() !='ogg' && img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase()!='webm'"
+                                    :src="img" tapmode @click="view(it.album, i)" />
+                                <video style="width: 100%; display: block;" v-if="img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase()=='mp4' || img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase()=='mov' || img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase()=='ogg' || img.slice((img.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase()=='webm'"
+                                    controls>
+                                    <source :src="img+'#t=0.1'">
+                                </video>
+                            </div>
+                            <div v-if="it.album.split(',').length > 1" class="aui-col-xs-3 img-list" v-for="(img,i) in it.album.split(',')" :key="i">
+                                <div>-</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <br v-if="it.album">
+        <div class="aui-content">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item" style="border-bottom: 1px solid lightgray;">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title" style="width: 15% !important;"><b>身高</b></div>
+                        <div class="aui-list-item-title" style="float: left !important; width: 80% !important; text-align: left !important;">
+                            {{it.height}}
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item" style="border-bottom: 1px solid lightgray;">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title"><b>体重</b></div>
+                        <div class="aui-list-item-title" style="float: left !important; width: 80% !important; text-align: left !important;">
+                            {{it.weight}}
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item" style="border-bottom: 1px solid lightgray;">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title"><b>交友节目</b></div>
+                        <div class="aui-list-item-title" style="float: left !important; width: 80% !important; text-align: left !important;">
+                            {{it.friendprogram}}
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item" style="border-bottom: 1px solid lightgray;">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title"><b>期望对象</b></div>
+                        <div class="aui-list-item-title" style="float: left !important; width: 80% !important; text-align: left !important;">
+                            {{it.expectation}}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="warning-msg">
+                <br> 请勿通过平台进行不法交易，如被举报核实后将作封号处理
+                <br><br> 私下交易无担保，平台下单假一赔十
+            </div>
+            <br>
+            <div style="margin:auto; text-align: center;">
+                <button v-if="canorder==1" type="button" class="aui-btn aui-btn-order" tapmode @click="APP.openWin(['manual_order_girl', 'header'], {title:it.username,id:it.uid, reload: true}, false, {reload: true})" style="width: 97%;">立即下单</button>
+            </div>
+            <br><br><br>
+        </div>
+        <div class="aui-bar aui-bar-tab">
+            <div v-if="status_abnormal==0" class="aui-bar-tab-item" tapmode @click="APP.openMask('girl_tips', {id: it.uid});">
+                <div class="aui-font-size-16"><i class="aui-iconfont aui-icon-like"></i> &nbsp;&nbsp; 打赏</div>
+            </div>
+            <div v-if="status_abnormal==1" class="aui-bar-tab-item" tapmode @click="showalert();">
+                <div class="aui-font-size-16"><i class="aui-iconfont aui-icon-like"></i> &nbsp;&nbsp; 打赏</div>
+            </div>
+            <div v-if="" class="aui-bar-tab-item" tapmode @click="checkuser();">
+                <div class="aui-font-size-16"><i class="aui-iconfont aui-icon-message"></i> &nbsp;&nbsp; 私聊</div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                it: {},
+                ok: false,
+                canorder: 0,
+                canchat: 0,
+                status_abnormal: 0,
+                todaychatlist: [],
+                todaychatcount: 0
+            },
+            created: function() {
+                $api.get('app/girldetails/' + api.pageParam.id, function(data) {
+                    vm.it = data;
+                    vm.ok = data.myfollow;
+                    vm.$nextTick(function() {
+                        api.parseTapmode();
+                    });
+                });
+            },
+            mounted: function() {
+                $api.get('my', function(userjson) {
+                    vm.canorder = userjson.canorder;
+                    if (userjson.canchat >= 1 && userjson.canchat_status == 1) {
+                        vm.canchat = 1;
+                        vm.todaychatcount = userjson.todaychatcount;
+                    }
+                    vm.status_abnormal = userjson.status_abnormal;
+                });
+            },
+            methods: {
+                showalert: function() {
+                    var toast = new auiToast();
+                    toast.fail({
+                        title: '账户异常，无法正常使用该功能'
+                    });
+                    return false;
+                },
+                checkuser: function() {
+                    $api.get('my', function(userjson) {
+                        if (!userjson.username || !userjson.city || !userjson.age || !userjson.zodiac || !userjson.job ||
+                            !userjson.program || !userjson.wish || !userjson.height || !userjson.weight || !userjson.intro) {
+                            var toast = new auiToast();
+                            toast.fail({
+                                title: '此账户还没有填写完整个人资料，不能私聊茶妹'
+                            });
+                            return false;
+                        }
+
+                        if (api.pageParam.id == 35221 || api.pageParam.id == 35222 || api.pageParam.id == 35223 || api.pageParam.id == 35224 || api.pageParam.id == 39266) {
+                            //商务专员 | 平台客服 | 退款专员 | 会员客服 | 财务专员
+                            $api.post('my/kefu_autosend', {
+                                uid: api.pageParam.id
+                            }, function() {})
+                            APP.openWin('chat', {
+                                uid: api.pageParam.id,
+                                username: api.pageParam.title
+                            }, true);
+                        } else {
+                            //今天已经私聊10个茶妹了
+                            if (vm.todaychatcount >= 10) {
+                                $api.get('my/check_chatgirl', {
+                                    gid: api.pageParam.id
+                                }, function(retVal) {
+                                    if (retVal == 0) {
+                                        var toast = new auiToast();
+                                        toast.fail({
+                                            title: '10次私聊数达上限'
+                                        });
+                                        return false;
+                                    } else {
+                                        APP.openWin('chat', {
+                                            uid: api.pageParam.id,
+                                            username: api.pageParam.title
+                                        }, true);
+                                    }
+                                });
+                            } else {
+                                APP.openWin('chat', {
+                                    uid: api.pageParam.id,
+                                    username: api.pageParam.title
+                                }, true);
+                            }
+                        }
+                    });
+                },
+                view: function(images, id) {
+                    var images = images.split(',');
+                    var imgArr = [];
+
+                    for (var i in images) {
+                        if (images[i].indexOf('.mp4') == -1) {
+                            imgArr.push(APP.getImgUrl(images[i]));
+                        }
+                    }
+                    var imageBrowser = api.require('imageBrowser');
+                    imageBrowser.openImages({
+                        imageUrls: imgArr,
+                        activeIndex: id,
+                    });
+                },
+                openTips: function() {
+
+                    }
+                    // follow: function(){
+                    //     if(!this.it.my) return void APP.openWin('login');
+                    //     $api.post('my/follow', {id: api.pageParam.id}, function(data){
+                    //         vm.ok = data;
+                    //     });
+                    // }
+            },
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>搜索</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .aui-list .aui-list-item-media {
+            width: 3rem;
+        }
+        
+        .img-list {
+            display: flex;
+            height: 4rem;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .img-list img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .line {
+            position: fixed;
+            right: 0;
+            top: 70vh;
+        }
+        
+        .line img {
+            width: 70px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- onsubmit="return keys()" -->
+    <form class="aui-searchbar" id="search"> 
+        <div class="aui-searchbar-input aui-border-radius">
+            <i class="aui-iconfont aui-icon-search"></i>
+            <input type="search" placeholder="搜索编号..." id="search-input">
+            <div class="aui-searchbar-clear-btn">
+                <i class="aui-iconfont aui-icon-close"></i>
+            </div>
+        </div>
+        <div class="aui-searchbar-btn" tapmode>取消</div>
+    </form>
+    <section class="aui-content" id="app" v-cloak>
+        <section class="aui-content aui-empty" v-if="it.length === 0"></section>
+        <ul class="aui-list aui-media-list aui-list-noborder">
+            <li class="aui-list-item" v-for="v in it" :key="v.uid" style="border-bottom: 1px solid lightgray;">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" style="width: 5rem !important; height: 5rem !important;">
+                        <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(v.avatar)" onerror="this.src='../image/user_header.jpg'" style="border-radius: 8px; max-height: 100%; max-width: 100%;" />
+                    </div>
+                    <div class="aui-list-item-inner" tapmode @click="v.uid > 0 && APP.openWin(['girl_view', 'header'], {title:v.username,id:v.uid, reload: true}, false, {reload: true})">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title aui-font-size-14" style="font-weight: bold; width: 100%;">
+                                <span style="float: left;">{{v.username}}</span>
+                                <span v-if="v.isqizhi==1" style="width: 42px; display: inline-block; padding-left: 0.2rem;"><img src="../image/icon/nvshen.png" style="width: 38px !important;"></span>
+                                <span v-if="v.albumverified==1" style="width: 42px;display: inline-block; padding-left: 0.2rem;"><img src="../image/icon/realppl.png" style="width: 38px !important;"></span>
+                            </div>
+                        </div>
+                        <div class="aui-list-item-text aui-text-default aui-font-size-16" v-text="v.content"></div>
+                        <div class="aui-list-item-text" v-if="v.picurl">
+                            <div class="aui-row-padded">
+                                <div class="aui-col-xs-4 img-list" v-for="(img,i) in v.picurl.split(',')" :key="i">
+                                    <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(img)" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-info aui-padded-b-0 aui-font-size-12" style="float:left !important; padding-top: 2px !important; padding-left: -5px !important;">
+                            <div class="aui-box-item" v-text="v.city"></div>
+                            <div class="aui-box-item" v-text="v.age+'岁 • '+v.zodiac"></div>
+                            <div class="aui-box-item" v-text="v.job"></div>
+                        </div>
+                        <div class="aui-info aui-padded-b-0 aui-font-size-12" style="float:left !important; clear: both !important; padding-top: 2px !important; padding-left: -5px !important;">
+                            <div class="aui-box-item" v-text="'身高'+v.height+'CM'"></div>
+                            <div class="aui-box-item" v-text="'体重'+v.weight+'KG'"></div>
+                            <div class="aui-box-item" v-text="'编号'+v.randomid"></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p class="aui-gird-lable aui-margin-t-10 aui-text-center" v-if="it.length > 0" v-text="loader"></p>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/lib/echo.js"></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        search_bar();
+        var menu = ['new', 'hot', 'at'];
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                it: [],
+                searchkey: '',
+                loader: '正在加载更多...',
+                param: {
+                    type: menu[api.pageParam.i],
+                    uid: api.pageParam.uid,
+                    page: 1
+                },
+            },
+            created: function() {
+                this.list();
+                APP.pullRefresh();
+                APP.loadMore(function() {
+                    vm.list();
+                });
+            },
+            mounted: function() {
+                this.$nextTick(function() {
+                    api.parseTapmode();
+                });
+                api.addEventListener({
+                    name: 'reloadmain'
+                }, function(ret) {
+                    window.location.reload();
+                });
+                api.addEventListener({
+                    name: 'reloadsearchgirl'
+                }, function(ret) {
+                    vm.it = [];
+                    vm.searchkey = document.querySelector(".aui-searchbar input").value;
+                    vm.param.page = 1;
+                    vm.list();
+                });
+            },
+            updated: function() {
+                echo.init({
+                    offset: 500,
+                    throttle: 0
+                });
+            },
+            methods: {
+                list: function() {
+                    var filterpro = $api.getStorage('province');
+                    var filtercity = $api.getStorage('city');
+                   
+                    //自行选择省份/城市
+                    if (filterpro && filtercity) {
+                        $api.get('app/girls?pro='+filterpro+'&city='+filtercity+'&keyword='+this.searchkey, this.param, function(data) {
+                            vm.it = vm.it.concat(data);
+                            vm.param.page++;
+                            if (data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                        });
+                    } else {
+                        //获取IP
+                        $api.setStorage('附近');
+                        $.ajax({ type: "GET",   
+                            url: "http://pv.sohu.com/cityjson",   
+                            async: false,
+                            success : function(retObj)
+                            {
+                            },
+                            error: function (msg) {
+                                var jsondata = msg.responseText.replace("var returnCitySN = ", "").replace(";", "");
+                                jsondata = JSON.parse(jsondata);
+ 
+                                //jsondata.cip = "223.91.84.231";
+                                $.ajax({ type: "GET",   
+                                        url: "http://whois.pconline.com.cn/ipJson.jsp?callback=testJson&ip=" + jsondata.cip,   
+                                        async: false,
+                                        success : function(retObj)
+                                        {
+                                            var cleandata = retObj.replace("if(window.testJson) {testJson(", "").replace(");}", "");
+                                            cleandata = JSON.parse(cleandata);
+
+                                            //在海外，不在国内
+                                            if (cleandata.pro == '' && cleandata.city == ''){
+                                                cleandata.pro = '海外';
+                                                cleandata.addr = cleandata.addr.trim();
+                                                $api.get('app/girls?pro='+cleandata.pro+'&city='+cleandata.addr+'&keyword='+this.searchkey, this.param, function(data) {
+                                                    vm.it = vm.it.concat(data);
+                                                    vm.param.page++;
+                                                    if (data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                                                });
+                                            } else {
+                                                //在国内
+                                                $api.get('app/girls?pro='+cleandata.pro+'&city='+cleandata.city, this.param, function(data) {
+                                                    vm.it = vm.it.concat(data);
+                                                    vm.param.page++;
+                                                    if (data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                                                });
+                                            }
+                                        }
+                                });
+                            }
+                        });
+                    }
+                },
+            },
+        });
+    };
+
+    function search_bar(){
+        var searchBar = document.querySelector(".aui-searchbar");
+        var searchBarInput = document.querySelector(".aui-searchbar input");
+        var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+        var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+        if(searchBar){
+            searchBarInput.onclick = function(){
+                searchBarBtn.style.marginRight = 0;
+            }
+            searchBarInput.oninput = function(){
+                if(this.value.length){
+                    searchBarClearBtn.style.display = 'block';
+                    searchBarBtn.classList.add("aui-text-info");
+                    searchBarBtn.textContent = "搜索";
+                }else{
+                    searchBarClearBtn.style.display = 'none';
+                    searchBarBtn.classList.remove("aui-text-info");
+                    searchBarBtn.textContent = "取消";
+                }
+            }
+        }
+        searchBarClearBtn.onclick = function(){
+            this.style.display = 'none';
+            searchBarInput.value = '';
+            searchBarBtn.classList.remove("aui-text-info");
+            searchBarBtn.textContent = "取消";
+        }
+        searchBarBtn.onclick = function(){
+            var keywords = searchBarInput.value;
+
+            if(keywords.length){
+                searchBarInput.blur();
+               api.pageParam.searchkey = keywords;
+               api.sendEvent({name: 'reloadsearchgirl'});
+               //APP.openWin(['search_girl', 'header'], {title: '搜索茶妹', searchkey: keywords}, true);
+               //window.location.reload();
+            }else{
+                this.style.marginRight = "-"+this.offsetWidth+"px";
+                searchBarInput.value = '';
+                searchBarInput.blur();
+            }
+        }
+    }
+</script>
+
+</html>

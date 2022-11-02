@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+<title>匿名举报</title>
+<link rel="stylesheet" type="text/css" href="../css/api.css" />
+<style>
+.aui-radio { 
+    width:1rem;height:1rem;
+}
+.aui-btn.aui-btn-outlined {
+    border-radius:50px
+}
+.aui-list .aui-list-item-right { 
+    position: absolute; 
+    right: 0; 
+    top: 0.25rem; 
+}
+.image-list {
+    width: 100%;
+    background-size: cover;
+    padding: 10px 10px;
+    overflow: hidden;
+}
+.image-item {
+    width: 30%;
+    height: 25vw;
+    background-image: url(../image/add.png);
+    background-size: 100% 100%;
+    display: inline-block;
+    position: relative;
+    border-radius: 5px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: solid 1px #e8e8e8;
+}
+.image-item .image-close {
+    position: absolute;
+    display: inline-block;
+    right: -6px;
+    top: -6px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 12px;
+    background-color: #ff464e;
+    color: #fff;
+    border: solid 1px #f26c85;
+    font-size: 0.6rem;
+    font-weight: 200;
+    z-index: 1;
+}
+</style>
+</head>
+<body>
+    <section class="aui-content" id="withdraw">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">茶妹</div>
+                    <div class="aui-list-item-input aui-padded-l-15">
+                        <input name="girlname" id="girlname" :value="girlname" readonly>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">选择要举报的类型</div>
+                    <div class="aui-list-item-input aui-padded-l-15">
+                        <select id="reporttype" name="reporttype">
+                            <option value="1">骗子</option>
+                            <option value="2">发广告</option>
+                        </select>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">补充描述</div>
+                    <div class="aui-list-item-input aui-padded-l-15">
+                        <textarea rows="4" id="description" name="description" placeholder="请详细说明举报内容"></textarea>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">联络方式</div>
+                    <div class="aui-list-item-input aui-padded-l-15">
+                        <textarea rows="4" id="contactmethod" name="contactmethod" placeholder="请填写您的联络方式，方便与您联系"></textarea>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div style="margin:auto; text-align: center;">
+            <div style="width: 97%; color: #fff !important; background-color: purple !important;" class="aui-btn aui-btn-order" @click="save()">确定</div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/input.js"></script>
+<script type="text/javascript">
+apiready = function(){
+    var toast = new auiToast();
+    var withdraw = new Vue({
+        el: '#withdraw',
+        data: {
+            girlname : '',
+            reporttype: '',
+            description:'',
+            contactmethod:'',
+        },
+        mounted: function(){
+            $api.get('my/withdraw_info', function(json){
+                withdraw.gid = api.pageParam.gid;
+                withdraw.girlname = api.pageParam.girlname;
+            });
+        },
+        methods: {
+            save: function(){
+                if (description.value === '') {
+                    toast.fail({ title: '请详细说明举报内容' });
+                    return false;
+                }
+                if (contactmethod.value === '') {
+                    toast.fail({ title: '请填写您的联络方式' });
+                    return false;
+                }
+
+                $api.post('my/complaint_girl', {
+                    reporttype: reporttype.value,
+                    description: description.value,
+                    contactmethod: contactmethod.value,
+                    gid : api.pageParam.gid
+                }, function(){
+                    toast.success({title: '提交成功'});
+                    api.sendEvent({name: 'complaint_girl'});
+                    api.closeWin();
+                }, function(data){
+                    toast.fail({title: data.msg});
+                });
+            },
+            optionList: function(key, title) {
+
+            }
+        }
+    });
+}
+</script>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+      <style>
+        body{background-color:transparent;padding-top: 20vh}
+        .aui-content-padded{margin:2rem}
+        .aui-card-list-user{margin-bottom:0.5rem;padding:0;position: relative;}
+        .aui-card-list-user i{position: absolute;top:0.2rem;right: 0.5rem}
+        .aui-card-list-user img{border-top-left-radius: 0.5rem;border-top-right-radius: 0.5rem}
+        .aui-card-list,.aui-card-list-header{border-radius:0.5rem}
+      </style>
+  </head>
+  <body>
+      <section class="aui-content-padded" id="sign" v-cloak>
+          <div class="aui-card-list">
+              <div class="aui-card-list-header aui-card-list-user">
+                  <img :src="it.bgurl" alt="">
+                  <i class="aui-iconfont aui-text-white aui-icon-roundclosefill aui-font-size-20" onclick="closeFrame()" tapmode></i>
+              </div>
+              <div class="aui-card-list-content-padded">
+                  <p class="aui-text-danger">
+                      当前可用余额：<span v-text="'￥'+it.money">0</span>，
+                      本应用需支付：
+                  </p>
+                  <ul class="aui-list aui-list-noborder aui-padded-l-10 aui-select-list">
+                      <li class="aui-list-item aui-padded-t-10">
+                          <div class="aui-list-item-label">
+                              <input id="m1" class="aui-radio" name="active" type="radio" v-model="num" value="1" tapmode>
+                          </div>
+                          <label for="m1" class="aui-list-item-inner">
+                              <span class="aui-text-danger" v-text="it.price"></span> 元 / 1个月
+                          </label>
+                      </li>
+                  </ul>
+              </div>
+              <div class="aui-card-list-footer aui-padded-15 aui-text-center aui-border-t">
+                  <div class="aui-btn aui-btn-outlined aui-margin-r-10" onclick="openWin('buy', true)" tapmode>余额充值</div>
+                  <div class="aui-btn aui-btn-info aui-margin-l-10" tapmode @click="buy()" tapmode>余额支付</div>
+              </div>
+          </div>
+      </section>
+  </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/lib/app.js"></script>
+  <script type="text/javascript" src="../script/vue.js"></script>
+  <script type="text/javascript" src="../script/common.js"></script>
+  <script type="text/javascript">
+  apiready = function(){
+      api.parseTapmode();
+      var vm = new Vue({
+          el: '#sign',
+          data: {it: api.pageParam, num:1, ok: true},
+          methods: {
+              buy: function(){
+                  $api.post('my/buyapps/'+this.it.id, {num: this.num}, function(json){
+                      api.alert({msg: '购买成功' }, function(){
+                          // openPlayer(api.pageParam.id, api.pageParam.tid);
+                          APP.openWin('web', {title:api.pageParam.title,url:api.pageParam.url}, true);
+                          APP.bindEvent('buluo/buluo');
+                          setTimeout(function(){
+                              api.closeWin();
+                          }, 2000);
+                      });
+                  }, function(json){
+                      api.alert({msg: json.msg}, function(){
+                          if(json.code === 1){
+                              APP.openWin('web', {title:api.pageParam.title,url:api.pageParam.url}, true);
+                          }else if(json.code === 2){
+                              vm.ok = false;
+                          }
+                      });
+                  })
+              }
+          }
+      });
+      api.addEventListener({
+          name: 'reload'
+      }, function(ret, err){
+          if(ret){
+              api.closeFrame();
+          }
+      });
+  };
+  function closeFrame(){
+      api.closeFrame();
+  }
+  </script>
+  </html>

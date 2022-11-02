@@ -1,0 +1,82 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>朋友圈</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+    body{background-color:transparent;}
+    .aui-content{position:fixed;bottom: 0;width:100%;z-index:99}
+    .aui-list .aui-list-item-media {width: 2.5rem;}
+    .aui-card-list-header .aui-icon-close{position:absolute;right:0;padding: 0 0.75rem}
+    .aui-card-list-content{max-height: 60vh;overflow-y:scroll;}
+    </style>
+</head>
+<body>
+    <div class="aui-mask aui-mask-in" tapmode onclick="api.closeFrame()"></div>
+    <section class="aui-content" id="app" v-cloak>
+        <div class="aui-card-list aui-margin-b-0">
+            <div class="aui-card-list-header aui-border-b" style="position:relative">
+                <h2 class="aui-text-center" style="width:100%">打赏</h2>
+                <i tapmode onclick="api.closeFrame()" class="aui-iconfont aui-icon-close aui-font-size-20"></i>
+            </div>
+            <div class="aui-card-list-footer aui-border-t">
+                <div class="aui-searchbar" style="height:auto">
+                    <div class="aui-searchbar-input aui-border-radius">
+                        <i class="aui-iconfont aui-icon-writefill"></i>
+                        <input type="search" v-model="amount" placeholder="请输入打赏金额...">
+                    </div>
+                    <button type="button" class="aui-btn aui-btn-danger" tapmode @click="add()" :disabled="disabled" style="border-radius:1rem">提交</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js" ></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/lib/echo.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            id: api.pageParam.id,
+            amount : 0,
+            disabled: false
+        },
+        created: function(){
+        },
+        mounted: function(){
+            this.$nextTick(function(){
+                api.parseTapmode();
+            });
+        },
+        updated: function(){
+            echo.init({offset: 500, throttle: 0});
+        },
+        methods: {
+            add: function(){
+                if(this.amount == '' || this.amount == 0) return false;
+                this.disabled = true;
+
+                $api.post('my/girl_tips', {amount: this.amount, id:this.id}, function(data){
+                    APP.toast('success', '打赏成功', function(){ api.closeFrame(); });
+                }, function(data){
+                    APP.toast('fail', data.msg, function(){
+                        vm.disabled=false;
+                        if(data.code === -1){
+                            APP.openWin('login');
+                            api.closeFrame();
+                        }
+                    });
+                });
+            }
+        },
+    });
+};
+</script>
+</html>

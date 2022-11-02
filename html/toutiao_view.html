@@ -1,0 +1,208 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,aItemress=no">
+    <title>视频详情</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+	body{padding-bottom: 3rem;}
+    .aui-card-list-content-padded img{margin: 0.75rem 0;}
+    #content p{font-size: 0.8rem;color:#3b3b3b}
+    #comment .aui-list .aui-list-item-media {width: 2.5rem;}
+    </style>
+</head>
+<body>
+    <section class="aui-content" id="app" v-cloak>
+        <div class="aui-card-list aui-border-t aui-border-b">
+            <h2 class="aui-card-list-header aui-padded-t-5 aui-padded-b-5" v-text="it.title"></h2>
+            <div class="aui-info aui-padded-l-15 aui-padded-r-15 aui-font-size-12">
+                <div class="aui-info-item" tapmode @click="it.user.uid > 0 && APP.openWin(['ta', 'header'], {title:it.user.username,id:it.user.uid, reload: true}, false, {reload: true})">
+                    <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(it.user.avatar)" style="width:1rem" class="aui-img-round" onerror="this.src='../image/user_header.jpg'"/>
+                    <span class="aui-margin-l-5" v-text="it.user.username"></span>
+                    <span class="aui-iconfont aui-icon-attention aui-margin-l-15 aui-margin-r-5"></span> {{it.views}}
+                </div>
+                <div v-text="APP.dateFormat(it.createtime)"></div>
+            </div>
+            <div class="aui-card-list-content-padded">
+            	<!-- <iframe src="https://v.miaopai.com/iframe?scid=iMxyR~53g49jUCzngjohWjuCIhckKFHexmAByQ__" frameborder="0" allowfullscreen></iframe> -->
+            </div>
+            <div class="aui-card-list-content-padded" id="content" v-html="it.content"></div>
+            <div class="aui-card-list-footer text-light aui-font-size-14">
+                <div tapmode @click="like()">
+                    <i class="aui-iconfont" :class="{'aui-icon-like':!likeid,'aui-icon-likefill aui-text-danger':likeid}"></i> {{it.likes}}
+                </div>
+                <div>
+                    <i class="aui-iconfont aui-icon-forward"></i> {{it.shares}}
+                </div>
+                <div>
+                    <a href="#comment" class="aui-text-default"><i class="aui-iconfont aui-icon-comment"></i> {{it.comments}}</a>
+                </div>
+            </div>
+        </div>
+        <div class="aui-content">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item wechat-top">
+                    <div class="aui-media-list-item-inner">
+                        <h3 class="aui-list-item-inner">热门推荐</h3>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle" v-for="v in it.flag" :key="v.id" tapmode @click="APP.openWin('toutiao_view', {id:v.id}, false, {reload:true})">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-media">
+                            <template v-for="(img,i) in v.picurl.split(',')" :key="i">
+                                <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(img)" v-if="i===0"/>
+                            </template>
+                        </div>
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title aui-ellipsis-2" v-text="v.title"></div>
+                            </div>
+                            <div class="aui-list-item-text aui-font-size-12">
+                                <div class="aui-info-item">
+                                    <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(v.user.avatar)" style="width:1rem" class="aui-img-round" onerror="this.src='../image/user_header.jpg'"/>
+                                    <span class="aui-margin-l-5" v-text="v.user.username"></span>
+                                </div>
+                                <div>
+                                    <span>喜欢(<span v-text="v.likes"></span>)</span> - <span>评论(<span v-text="v.comments"></span>)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+    <section class="aui-content aui-margin-t-10" id="comment" v-cloak>
+        <ul class="aui-list aui-list-noborder aui-media-list">
+            <li class="aui-list-item wechat-top">
+                <div class="aui-media-list-item-inner">
+                    <h3 class="aui-list-item-inner">最新评论</h3>
+                </div>
+            </li>
+            <li class="aui-list-item" v-for="v in it" :key="v.id">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../image/lazloding.png" class="aui-img-round" :data-echo="APP.getImgUrl(v.user.avatar)" onerror="this.src='../image/user_header.jpg'"/>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title" v-text="v.user.username"></div>
+                            <div class="aui-list-item-right" v-text="APP.dateFormat(v.createtime)"></div>
+                        </div>
+                        <div class="aui-list-item-text aui-text-default" v-text="v.content"></div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p class="aui-gird-lable aui-margin-t-10 aui-text-center" v-text="loader"></p>
+		<div class="aui-bar aui-bar-tab">
+			<div class="aui-card-list aui-margin-b-0">
+	            <div class="aui-card-list-footer">
+	                <div class="aui-searchbar" style="height:auto">
+	                    <div class="aui-searchbar-input aui-border-radius">
+	                        <i class="aui-iconfont aui-icon-writefill"></i>
+	                        <input type="search" v-model="content" placeholder="请输入评论内容...">
+	                    </div>
+	                    <button type="button" class="aui-btn aui-btn-danger" tapmode @click="add()" :disabled="disabled" style="border-radius:1rem">提交</button>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js" ></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/lib/echo.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    var vm = new Vue({
+            el: '#app',
+            data: {
+            it: {user:{}, flag:{}},
+            id: api.pageParam.id,
+            likeid: false,
+        },
+        created: function(){
+            $api.get('app/toutiao_view/'+this.id, function(data){
+                vm.it = data;
+                vm.likeid = data.likeid == 1 ? true : false;
+                vm.$nextTick(function(){
+                    api.parseTapmode();
+                });
+            });
+        },
+        updated: function(){
+            echo.init({offset: 500, throttle: 0});
+        },
+        methods: {
+            like: function(){
+              $api.post('my/toutiao_like', {id: this.id}, function(){
+                  if(vm.likeid){
+                      vm.likeid = false;
+                      vm.it.likes--;
+                  }else{
+                      vm.likeid = true;
+                      vm.it.likes++;
+                  }
+              });
+            }
+        },
+    });
+    //评论
+    var vm2 = new Vue({
+            el: '#comment',
+            data: {
+            it: [],
+            loader: '正在加载更多...',
+            page: 1,
+            id: api.pageParam.id,
+            content: '',
+            disabled: false,
+        },
+        created: function(){
+            this.list();
+            APP.loadMore(function(){
+                vm2.list();
+            });
+        },
+            mounted: function(){
+            this.$nextTick(function(){
+                api.parseTapmode();
+            });
+        },
+        updated: function(){
+            echo.init({offset: 500, throttle: 0});
+        },
+        methods: {
+            list: function(){
+                $api.get('app/toutiao_comment', {page: this.page, id:this.id}, function(data){
+                    vm2.it = vm2.it.concat(data);
+                    vm2.page++;
+                    if(data.length === 0) vm2.loader = '已到底部', APP.loadMore();
+                });
+            },
+            add: function(){
+				if(this.content == '') return false;
+                this.disabled = true;
+                $api.post('my/toutiao_comment', {content: this.content, id:this.id}, function(data){
+                    APP.toast('success', '评论成功', function(){
+                        vm2.it = vm2.it.concat(data);
+						vm2.content = '';
+                        vm2.disabled = false;
+						// location.href = '#comment';
+                    });
+                }, function(data){
+                    APP.toast('fail', data.msg, function(){
+                        vm2.disabled = false;
+                    });
+                });
+            },
+        },
+    });
+};
+</script>
+</html>

@@ -1,0 +1,931 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>私信</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+		.aui-chat .aui-chat-content{
+			font-size: 0.8rem
+		}
+		img.emotion{
+			display:inline-block !important;
+			vertical-align:bottom;
+			width:1.2rem;
+			padding: 1px
+		}
+		.w3-modal {
+			z-index:3;
+			display:none;
+			padding-top:50px;
+			position:fixed;
+			left:0;
+			top:0;
+			width:100%;
+			height:100%;
+			overflow:auto;
+			background-color:rgb(0,0,0);
+			background-color:rgba(0,0,0,0.4)
+		}
+		.w3-modal-content {
+			margin:auto;
+			background-color:#fff;
+			position:relative;
+			padding:0;
+			outline:0;
+			width:fit-content;
+		}
+		.w3-button{border:none;display:inline-block;padding:8px 16px;vertical-align:middle;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;white-space:nowrap}
+		.w3-button{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}   
+		.w3-xlarge {
+			font-size:24px!important
+		}
+		.w3-display-topright {
+			position:absolute;
+			right:0;
+			top:0
+		}
+		.w3-animate-zoom {
+			animation:animatezoom 0.6s
+		}
+		@keyframes animatezoom{
+			from{transform:scale(0)} to{transform:scale(1)}
+		}
+		.daShangmsg {
+			display: inline-block; 
+			text-align: center; 
+			width: 100%; 
+			color: red; 
+			font-size: 10px;
+		}
+	</style>
+</head>
+<body>
+    <section class="aui-chat" id="app" v-cloak>
+		<p class="aui-gird-lable aui-margin-b-10 aui-text-center" v-if="it.list.length > 0" v-text="loader"></p>
+        <template v-for="(v,i) in it.list" :key="v.id" ref="foo">
+			<div class="aui-chat-header" v-if="i % limit === 0" v-text="APP.dateFormat(v.createtime)"></div>
+			<div class="aui-chat-item aui-chat-left" v-if="v.uid === it.user.uid && v.type === 'girl'">
+	            <div class="aui-chat-media" @click="APP.openWin(['girl_view', 'header'], {title:api.pageParam.username,id:api.pageParam.uid, reload: true}, false, {reload: true})" tapmode>
+	                <img :src="APP.getImgUrl(it.user.avatar)" onerror="this.src='../image/user_header.jpg'" style="height: 35px !important;"/>
+	            </div>
+	            <div class="aui-chat-inner">
+	                <div class="aui-chat-name" v-text="it.user.username"></div>
+	                <div class="aui-chat-content">
+	                    <div class="aui-chat-arrow"></div>
+	                    <div :id="v.id" v-html="girlcontent(v.id,v.content)" ontouchstart="girltouchstart(this)" ontouchmove="girltouchmove()" ontouchend="girltouchend()"></div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="aui-chat-item aui-chat-right" v-if="v.uid === it.my.uid && v.type === 'member' && v.content.indexOf(vm.it.my.username + '成功给' + api.pageParam.username + '打赏') == -1">
+	            <div class="aui-chat-media">
+	                <img :src="APP.getImgUrl(it.my.avatar)" onerror="this.src='../image/user_header.jpg'" style="height: 35px !important;"/>
+	            </div>
+	            <div class="aui-chat-inner">
+	                <div class="aui-chat-name" v-text="it.my.username"></div>
+	                <div class="aui-chat-content">
+	                    <div class="aui-chat-arrow"></div>
+	                    <div :id="v.id" v-html="content(v.id,v.content)" ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></div>
+	                </div>
+	            </div>
+	        </div>
+			<div v-if="v.uid === it.my.uid && v.type === 'member' && v.content.indexOf(it.my.username + '成功给' + api.pageParam.username + '打赏') != -1">
+				<span class="daShangmsg" v-text="v.content"></span>
+			</div>
+		</template>
+		<span id="bottom"></span>
+    </section>
+	<div id="modal01" class="w3-modal" onclick="this.style.display='none'" style="z-index: 9999;">
+		<span class="w3-button w3-hover-red w3-xlarge w3-display-topright">&times;</span>
+		<div class="w3-modal-content w3-animate-zoom">
+			<img id="img01" style="width:100%">
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/lib/api.js" ></script>
+<script type="text/javascript" src="../script/lib/app.js" ></script>
+<script type="text/javascript" src="../script/lib/vue.js" ></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js" ></script>
+<script type="text/javascript" src="../script/lib/recorder.js" ></script>
+<script type="text/javascript">
+var vm;
+apiready = function(){
+	api.addEventListener({
+    name:'longpress'
+    },function(ret,err){
+
+        if (Htmls != "")
+        {
+            Htmls = "";
+        }
+    });
+	var Htmls = "";
+	vm = new Vue({
+    	el: '#app',
+    	data: {
+            it: {list:[], user: {}, my: {}},
+			emotion: {},
+            loader: '下拉加载更多...',
+			page: 1,
+			limit: 10,
+			canchat: 0,
+			interval: null
+        },
+    	created: function(){
+            this.list();
+			APP.pullRefresh(function(){
+				vm.list(true);
+			});
+			APP.bindEvent(['my','chatlist']);
+			api.readFile({
+			    path: 'widget://image/emotion/emotion.json'
+			}, function(ret, err) {
+			    if (ret.status) {
+					var data = JSON.parse(ret.data);
+			        for (var i in data) {
+						vm.emotion[data[i].text] = data[i].name;
+			        }
+			    }
+			});
+
+			$api.get('my', function(userjson) {
+				if (userjson.canchat >= 1 && userjson.canchat_status == 1) {
+					vm.canchat = 1;
+				}
+			});
+
+			this.interval = setInterval(this.refreshData, 3000);
+        },
+		beforeDestroy () {
+			clearInterval(this.interval)
+		},
+    	methods: {
+			refreshData () {
+				api.sendEvent({name: 'chatlist'});
+				$api.get('my/unreadchat', {uid: api.pageParam.uid}, function(data){
+					vm.it.user = data.user;
+					vm.it.my = data.my;
+					vm.it.list = vm.it.list.concat(data.list);
+                    if (data.list.length < vm.limit) vm.loader = '';
+					if (data.list.length > 0)
+						vm.bottom();
+                });
+			},
+            list: function(before){
+                $api.get('my/chat', {uid: api.pageParam.uid, page: this.page}, function(data){
+					vm.it.user = data.user;
+					vm.it.my = data.my;
+					if(before){
+						vm.it.list = data.list.concat(vm.it.list);
+					}else{
+	                    vm.it.list = vm.it.list.concat(data.list);
+						vm.bottom();
+					}
+                    vm.page++;
+                    if(data.list.length < vm.limit) vm.loader = '';
+                });
+            },
+			content: function(chatid,str){
+				str = str.replace(/\n/g, "<br>");
+				str = str.replace(/\[[\u4e00-\u9fa5]+\]/g, function(item){
+					return !!vm.emotion[item] ? '<img class="emotion" src="../image/emotion/'+ vm.emotion[item] +'.png">' : item;
+				});
+
+				if (str.indexOf('metaswapweb.cn/uploads') != -1) {
+					var ext = str.substring(str.lastIndexOf('.') + 1);
+					switch(ext.toLowerCase()) {
+						case 'jpeg':
+						case 'jpg':
+						case 'png':
+						case 'gif':
+						case 'webp':
+							return '<img class="emotion" src="'+ str +'" id="own'+chatid+'" onclick="ViewFullImg('+chatid+',this)">';
+							break;
+						case 'mp4':
+						case 'mov':
+						case 'ogg':
+						case 'webm':
+							return '<video width="100%" height="auto" controls><source src="' + str + '" ></video>';
+						case 'wav':
+							return '<audio controls="" src="' + str + '" style="width: 150px !important;"></audio>';
+							break;
+						default:
+							break;
+					}
+				}
+
+				if(str.indexOf("metaswapweb.cn/baidumap") != -1){
+					var aIndex =  str.indexOf("<a");
+					var openwincode = str.substring(0, aIndex);
+					var mapurl = openwincode.replace('<iframe src="', '').replace('" width="100%" height="150"></iframe><br>', '');
+					openwincode +='<a onclick="APP.openWin([\'openmap\', \'header\'], {title: \'百度地图\', url: \''+mapurl+'\'}, true)">点击打开全屏</a>';
+					return openwincode;
+				}
+
+				return str;
+			},
+			girlcontent: function(chatid,str){
+				str = str.replace(/\n/g, "<br>");
+				str = str.replace(/\[[\u4e00-\u9fa5]+\]/g, function(item){
+					return !!vm.emotion[item] ? '<img class="emotion" src="../image/emotion/'+ vm.emotion[item] +'.png">' : item;
+				});
+				
+				if (str.indexOf('metaswapweb.cn/uploads') != -1) {
+					var ext = str.substring(str.lastIndexOf('.') + 1);
+					switch(ext.toLowerCase()) {
+						case 'jpeg':
+						case 'jpg':
+						case 'png':
+						case 'gif':
+						case 'webp':
+							return '<img class="emotion" src="'+ str +'" id="girl'+chatid+'" onclick="GirlViewFullImg('+chatid+',this)">';
+							break;
+						case 'mp4':
+						case 'mov':
+						case 'ogg':
+						case 'webm':
+							return '<video width="100%" height="auto" controls><source src="' + str + '" ></video>';
+						case 'wav':
+							return '<audio controls="" src="' + str + '" style="width: 150px !important;"></audio>';
+						default:
+							break;
+					}
+				}
+
+				if (str.indexOf('src="/upload/images/') != -1) {
+					var ext = str.substring(str.lastIndexOf('.') + 1, str.lastIndexOf('"'));
+					var imgpath = str.replace('<img class="chat-img" src="', '').replace('" >', '');
+
+					switch(ext.toLowerCase()) {
+						case 'jpeg':
+						case 'jpg':
+						case 'png':
+						case 'gif':
+						case 'webp':
+							return '<img class="emotion" src="http://sxshdzsw.cn'+ imgpath +'" id="own'+chatid+'" onclick="ViewFullImg('+chatid+',this)">';
+							break;
+						case 'mp4':
+						case 'mov':
+						case 'ogg':
+						case 'webm':
+							return '<video width="100%" height="auto" controls><source src="http://sxshdzsw.cn' + str + '" ></video>';
+						default:
+							break;
+					}
+				} else if (str.indexOf("src='/upload/files/") != -1) {
+					var videopath = str.substring(str.indexOf("src='") + 5, str.lastIndexOf(' type=') - 1);
+					var ext = videopath.substring(videopath.indexOf('.') + 1);
+
+					switch(ext.toLowerCase()) {
+						case 'mp4':
+						case 'mov':
+						case 'ogg':
+						case 'webm':
+							return '<video width="100%" height="auto" controls><source src="http://sxshdzsw.cn' + videopath + '" ></video>';
+						default:
+							break;
+					}
+				}
+
+				if(str.indexOf("metaswapweb.cn/baidumap") != -1){
+					var aIndex =  str.indexOf("<a");
+					var openwincode = str.substring(0, aIndex);
+					var mapurl = openwincode.replace('<iframe src="', '').replace('" width="100%" height="150"></iframe><br>', '');
+					openwincode +='<a onclick="APP.openWin([\'openmap\', \'header\'], {title: \'百度地图\', url: \''+mapurl+'\'}, true)">点击打开全屏</a>';
+					return openwincode;
+				}
+				return str;
+			},
+			bottom: function(){
+				this.$nextTick(function(){
+					api.parseTapmode();
+					setTimeout(function(){
+						location.href = "#bottom";
+					}, 500);
+				});
+			},
+			addToMember: function (audioURL) {
+				vm.it.list = vm.it.list.concat({
+					uid: vm.it.my.uid,
+					content: '<audio controls src="' + audioURL + '" style="width: 150px !important;"></audio>',
+					createtime: Date.parse(new Date()) / 1000,
+					type: 'member'
+				});
+				vm.bottom();
+			},
+			// addAutoReply: function(answer) {
+			// 	vm.it.list = vm.it.list.concat({
+			// 		uid: vm.it.user.uid,
+			// 		content: answer,
+			// 		createtime: Date.parse(new Date()) / 1000,
+			// 		type: 'girl'
+			// 	});
+			// 	vm.bottom();
+			// }
+        },
+    });
+	var UIChatBox = api.require('UIChatBox');
+	UIChatBox.open({
+	    maxRows: 4,
+	    emotionPath: 'widget://image/emotion',
+	    texts: {
+			recordBtn: {
+				normalTitle: '按住 说话',
+				activeTitle: '松开 结束'
+        	},
+	        sendBtn: {
+	            title: ' 发送 '
+	        }
+	    },
+	    styles: {
+			topDivider: {
+				width: 1,
+				color: '#ddd'
+			},
+	        inputBar: {
+	            borderColor: '#d9d9d9',
+	            bgColor: '#f2f2f2',
+	        },
+	        inputBox: {
+	            borderColor: '#B3B3B3',
+	            bgColor: '#FFFFFF'
+	        },
+	        emotionBtn: {
+	            normalImg: 'widget://image/chatBox_laugh1.png'
+	        },
+			extrasBtn: {
+				normalImg: 'widget://image/chatBox_add1.png'
+			},
+	        keyboardBtn: {
+	            normalImg: 'widget://image/chatBox_key1.png'
+	        },
+			// speechBtn: {                                        //（可选项）JSON对象；输入框左侧按钮样式，不传则不显示左边的语音按钮
+			// 	normalImg: 'widget://image/chatBox_mic1.png'    //字符串类型；左侧按钮常态的背景图片（本地路径，fs://、widget://）
+			// },
+			recordBtn: {                        //JSON对象；“按住 录音”按钮的样式
+				normalBg: '#c4c4c4',            //（可选项）字符串类型；按钮常态的背景，支持 rgb，rgba，#，图片路径（本地路径，fs://、widget://）；默认：'#c4c4c4'
+				activeBg: '#999999',            //（可选项）字符串类型；按钮按下时的背景，支持 rgb，rgba，#，图片路径（本地路径，fs://、widget://）；默认：'#999999'；normalBg 和 activeBg 必须保持一致，同为颜色值，或同为图片路径
+				color: '#000',                  //（可选项）字符串类型；按钮标题文字的颜色，支持 rgb，rgba，#，默认：'#000000'
+				size: 14                        //（可选项）数字类型；按钮标题文字的大小，默认：14
+			},
+			recordPanelBtn:{                     //JSON对象；录音面板样式
+				normalImg: 'widget://image/chatBox_mic1.png',        //（可选项）字符串类型；按钮常态的图片
+				activeImg: 'widget://image/chatBox_mic1.png',         //（可选项）字符串类型；按钮按下时的图片
+				width:100,           //（可选项）数字类型；按钮的宽度，默认：100
+				height:100           //（可选项）数字类型；按钮的高度，默认：100
+			},
+	        sendBtn: {
+	            titleColor: '#fff',
+	            bg: '#ff464e',
+	            activeBg: '#ff464e',
+	            titleSize: 16
+	        }
+	    },
+		extras: {
+			titleSize: 13,
+			titleColor: '#a3a3a3',
+			btns: [
+				{
+					title: '图片',
+					normalImg: 'widget://image/chatBox_album1.png',
+					activeImg: 'widget://image/chatBox_album1.png'
+				}, 
+				{
+					title: '拍照',
+					normalImg: 'widget://image/chatBox_camera1.png',
+					activeImg: 'widget://image/chatBox_camera1.png'
+				},
+				{
+					title: '视频',
+					normalImg: 'widget://image/chatBox_video1.png',
+					activeImg: 'widget://image/chatBox_video1.png'
+				},
+				{
+					title: '位置',
+					normalImg: 'widget://image/chatBox_location1.png',
+					activeImg: 'widget://image/chatBox_location1.png'
+				},
+				{
+					title: '阅后即焚',
+					normalImg: 'widget://image/chatBox_burn1.png',
+					activeImg: 'widget://image/chatBox_burn1.png'
+				}
+			]
+		}
+	}, function(ret, err) {
+	    if (ret && ret.eventType === 'send' && ret.msg !== '') {
+			
+			if (vm.it.my.mute_hour > 0 && api.pageParam.uid != 35221 && api.pageParam.uid != 35222 && api.pageParam.uid != 35223 && api.pageParam.uid != 35224 && api.pageParam.uid != 39266) {
+				var toast = new auiToast();
+				toast.fail({title: '被禁言' + vm.it.my.mute_hour + '小时，详情咨询会员客服' });
+				return false;
+			}
+
+			if (vm.canchat == 1) {
+				$api.post('my/chat', {content: ret.msg, uid: api.pageParam.uid}, function(){
+					UIChatBox.value({msg: ''});
+					vm.it.list = vm.it.list.concat({
+						uid: vm.it.my.uid,
+						content: ret.msg,
+						createtime: Date.parse(new Date()) / 1000,
+						type: 'member'
+					});
+					vm.bottom();
+				})
+			} else {
+				var toast = new auiToast();
+				toast.fail({title: '此账户还没有开通会员/已遭冻结，不能私聊茶妹' });
+			}
+	    } else if (ret.eventType == 'clickExtras') {
+			
+			if (vm.it.my.mute_hour > 0 && api.pageParam.uid != 35221 && api.pageParam.uid != 35222 && api.pageParam.uid != 35223 && api.pageParam.uid != 35224 && api.pageParam.uid != 39266) {
+				var toast = new auiToast();
+				toast.fail({title: '被禁言' + vm.it.my.mute_hour + '小时，详情咨询会员客服' });
+				return false;
+			}
+
+			if(ret.index == 0) {
+				var resultList = api.hasPermission({ list:['photos'] });
+				var canproceed = false;
+
+				if (resultList[0].granted) {
+					canproceed = true;
+				} else {
+					api.requestPermission({
+						list:['photos'],
+						code:1
+					}, function(appret, apperr){
+						if (appret.list[0].granted){
+							canproceed = true;
+						}
+					});
+				}
+
+				if (canproceed) {
+					//打开相册
+					api.getPicture({
+						sourceType: 'library',
+						encodingType: 'jpg',
+					}, function(alb, alberr) {
+						if (alb && alb.data) {
+							var json = {};
+							json['image0'] = alb.data;
+							api.ajax({
+								url: 'https://metaswapweb.cn/v1/my/chat_sendimg',
+								method: 'post',
+								headers: {
+									token: $api.getStorage('token')
+								},
+								certificate: {
+									path: 'widget://image/client.p12',
+									password: 'dXF5r6fkwIwojeV3'
+								},
+								data: {
+									values: { uid: api.pageParam.uid, viewonce: 0 },
+									files: json
+								},
+							},function(retval, reterr){
+								if (retval) {
+									if (retval.code === 0) {
+										vm.it.list = vm.it.list.concat({
+											uid: vm.it.my.uid,
+											content: '<img class="emotion" src="' + alb.data + '" onclick="ViewFullImg(0,this)">',
+											createtime: Date.parse(new Date()) / 1000,
+											type: 'member'
+										});
+										vm.bottom();
+									}else{
+										//api.alert({ msg: retval.msg});
+									}
+								}
+							});
+						}
+					});
+				}
+			} else if (ret.index == 1) {
+				var resultList = api.hasPermission({ list:['camera'] });
+				var canproceed = false;
+
+				if (resultList[0].granted) {
+					canproceed = true;
+				} else {
+					api.requestPermission({
+						list:['camera'],
+						code:1
+					}, function(appret, apperr){
+						if (appret.list[0].granted){
+							canproceed = true;
+						}
+					});
+				}
+
+				if (canproceed) {
+					//打开前面镜头
+					api.getPicture({
+						sourceType: 'camera',
+						direction: 'front',
+					}, function(alb, err) {
+						if (alb && alb.data) {
+							var json = {};
+							json['image0'] = alb.data;
+
+							api.ajax({
+								url: 'https://metaswapweb.cn/v1/my/chat_sendimg',
+								method: 'post',
+								headers: {
+									token: $api.getStorage('token')
+								},
+								certificate: {
+									path: 'widget://image/client.p12',
+									password: 'dXF5r6fkwIwojeV3'
+								},
+								data: {
+									values: { uid: api.pageParam.uid, viewonce: 0 },
+									files: json
+								},
+							},function(retval, reterr){
+								if (retval) {
+									if (retval.code === 0) {
+										vm.it.list = vm.it.list.concat({
+											uid: vm.it.my.uid,
+											content: '<img class="emotion" src="' + alb.data + '" onclick="ViewFullImg(0,this)">',
+											createtime: Date.parse(new Date()) / 1000,
+											type: 'member'
+										});
+										vm.bottom();
+									}else{
+										//api.alert({ msg: retval.msg});
+									}
+								}
+							});
+						}
+					});
+				}
+			} else if (ret.index == 2) {
+				//视频
+				var resultList = api.hasPermission({ list:['photos'] });
+				var canproceed = false;
+
+				if (resultList[0].granted) {
+					canproceed = true;
+				} else {
+					api.requestPermission({
+						list:['photos'],
+						code:1
+					}, function(appret, apperr){
+						if (appret.list[0].granted){
+							canproceed = true;
+						}
+					});
+				}
+
+				if (canproceed) {
+					 api.getPicture({
+						sourceType: 'library',
+						mediaValue: 'video',
+					}, function(alb, alberr) {
+						if (alb && alb.data) {
+							api.toast({msg: '上传视频中...', time: 8000});
+							var json = {};
+							json['image0'] = alb.data;
+
+							api.ajax({
+								url: 'https://metaswapweb.cn/v1/my/chat_sendimg',
+								method: 'post',
+								headers: {
+									token: $api.getStorage('token')
+								},
+								certificate: {
+									path: 'widget://image/client.p12',
+									password: 'dXF5r6fkwIwojeV3'
+								},
+								data: {
+									values: { uid: api.pageParam.uid, viewonce: 0 },
+									files: json
+								},
+							},function(retval, reterr){
+								if (retval) {
+									if (retval.code === 0) {
+										vm.it.list = vm.it.list.concat({
+											uid: vm.it.my.uid,
+											content: '<video width="100%" height="auto" controls><source src="' + alb.data + '" ></video>',
+											createtime: Date.parse(new Date()) / 1000,
+											type: 'member'
+										});
+										vm.bottom();
+									}else{
+										//api.alert({ msg: retval.msg});
+									}
+								}
+							});
+						}
+					});
+				}
+			} else if (ret.index == 3) {
+				var resultList = api.hasPermission({ list:['location'] });
+				var canproceed = false;
+
+				if (resultList[0].granted) {
+					canproceed = true;
+				} else {
+					api.requestPermission({
+						list:['location'],
+						code:1
+					}, function(appret, apperr){
+						if (appret.list[0].granted) {
+							canproceed = true;
+						}
+					});
+				}
+
+				if (canproceed) {
+					var map = api.require('bMap');
+					map.setAgreePrivacy({
+						agree:true
+					});
+
+					map.getLocation({
+						accuracy: '100m',
+						autoStop: true,
+						filter: 1
+					}, function(ret, err) {
+						if (ret.status) {
+							var latitude = ret.lat; //geodata.substring(geodata.indexOf("latitude() { return '") + 21, geodata.lastIndexOf("function geoplugin_longitude") - 5);
+							var longitude = ret.lon; //geodata.substring(geodata.indexOf("longitude() { return '") + 22, geodata.lastIndexOf("function geoplugin_locationAccuracyRadius") - 5);
+							var locationlink = '<iframe src="https://metaswapweb.cn/baidumap?lat='+latitude+'&long='+longitude +'" width="100%" height="150"></iframe>';
+							locationlink+= '<br><a onclick="APP.openWin([\'openmap\', \'header\'], {title: \'百度地图\', url: \'https://metaswapweb.cn/baidumap?lat='+latitude+'&long='+longitude +'\'}, true)">点击打开全屏</a>';
+							$api.post('my/chat', {content: locationlink, uid: api.pageParam.uid}, function(){
+								vm.it.list = vm.it.list.concat({
+									uid: vm.it.my.uid,
+									content: locationlink,
+									createtime: Date.parse(new Date()) / 1000,
+									type: 'member'
+								});
+								vm.bottom();
+							})
+						} else {
+							//alert(err.code);
+						}
+					});
+				}
+			} else if (ret.index == 4) {
+				//阅后即焚
+				api.getPicture({
+					sourceType: 'library',
+					encodingType: 'jpg',
+				}, function(alb, alberr) {
+					if (alb && alb.data) {
+						var json = {};
+						json['image0'] = alb.data;
+
+						api.ajax({
+							url: 'https://metaswapweb.cn/v1/my/chat_sendimg',
+							method: 'post',
+							headers: {
+								token: $api.getStorage('token')
+							},
+							certificate: {
+								path: 'widget://image/client.p12',
+								password: 'dXF5r6fkwIwojeV3'
+							},
+							data: {
+								values: { uid: api.pageParam.uid, viewonce: 1 },
+								files: json
+							},
+						},function(retval, reterr){
+							if (retval) {
+								if (retval.code === 0) {
+									vm.it.list = vm.it.list.concat({
+										uid: vm.it.my.uid,
+										content: '<img class="emotion" src="' + alb.data + '" id="own'+retval.data+'" onclick="ViewFullImg('+retval.data+',this)">',
+										createtime: Date.parse(new Date()) / 1000,
+										type: 'member'
+									});
+									vm.bottom();
+								}else{
+									//api.alert({ msg: retval.msg});
+								}
+							}
+						});
+					}
+				});
+			}
+		}
+	});
+
+	//webkitURL is deprecated but nevertheless
+	URL = window.URL || window.webkitURL;
+
+	var gumStream; 						//stream from getUserMedia()
+	var rec; 							//Recorder.js object
+	var input; 							//MediaStreamAudioSourceNode we'll be recording
+
+	// shim for AudioContext when it's not avb. 
+	var AudioContext = window.AudioContext || window.webkitAudioContext;
+	var audioContext //audio context to help us record
+
+	UIChatBox.addEventListener({
+		target: 'recordBtn',
+		name: 'press'
+	}, function(ret, err) {
+		if (ret) {
+			var resultList = api.hasPermission({ list:['microphone'], code: 1 });
+			if (resultList[0].granted) {
+				startRecording();
+			} else {
+				api.requestPermission({
+					list:['microphone'],
+					code:1
+				}, function(appret, apperr){
+					if (appret.list[0].granted){
+						startRecording();
+					}
+				});
+			}
+		} else {
+			//alert(JSON.stringify(err));
+		}
+	});
+
+	UIChatBox.addEventListener({
+		target: 'recordBtn',
+		name: 'press_cancel'
+	}, function(ret, err) {
+		if (ret) {
+			stopRecording();
+		} else {
+			//alert(JSON.stringify(err));
+		}
+	});
+}
+
+function startRecording() {
+    var constraints = { audio: true, video:false }
+
+	navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+		audioContext = new AudioContext();
+		/*  assign to gumStream for later use  */
+		gumStream = stream;
+		input = audioContext.createMediaStreamSource(stream);
+		rec = new Recorder(input,{numChannels:1})
+		rec.record();
+	}).catch(function(err) {
+		//alert(JSON.stringify(err));
+	});
+}
+
+function stopRecording() {
+	//tell the recorder to stop the recording
+	rec.stop();
+
+	//stop microphone access
+	gumStream.getAudioTracks()[0].stop();
+
+	//create the wav blob and pass it on to createDownloadLink
+	rec.exportWAV(createDownloadLink);
+}
+
+function createDownloadLink(blob) {
+    var url = URL.createObjectURL(blob);
+
+	//name of .wav file to use during upload and download (without extension)
+	var filename = new Date().toISOString() + ".wav";
+
+	var reader = new FileReader();
+	reader.readAsDataURL(blob); 
+	reader.onloadend = function() {
+		var base64data = reader.result;
+		$api.post('my/chat_sendvoice', {content: base64data, filename: filename, uid: api.pageParam.uid}, function(){ 
+			vm.addToMember(url);
+		});
+	}
+}
+	var timeOutEvent = 0;
+       //定时器
+       //开始按
+
+    function gtouchstart(obj) {
+        Htmls = obj.id;
+        timeOutEvent = setTimeout(function(){
+			api.actionSheet({
+				title: '',
+				buttons: ['撤回', '复制'],
+				cancelTitle: '取消'
+			}, function(ret, err) {
+				if (ret) {
+					if (ret.buttonIndex == 1) {
+						//撤回信息
+						$api.post('my/chat_deletemsg/'+ obj.id, function(data){
+							if (data) {
+								document.getElementById(obj.id).remove();
+							}
+						});
+					} else if (ret.buttonIndex == 2) {
+						//复制
+						var clipBoard = api.require('clipBoard');
+						clipBoard.set({
+							value: document.getElementById(obj.id).innerHTML
+						}, function(cop, coperr) {
+							if (cop && cop.status) {
+								var toast = new auiToast();
+                				toast.success({ title: '复制成功'});
+							}
+						});
+					}
+				}
+			});
+			
+            //因为页面弹动会导致元素一直处于按住的状态，所以超过700毫秒自动清空变量，避免点击其他元素触发事件
+            Htmls = "";
+        }, 700);
+
+        return false;
+    };
+
+    //手释放，取消长按事件
+    function gtouchend() {
+        clearTimeout(timeOutEvent);
+        Htmls = "";
+    };
+
+    //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+
+    function gtouchmove() {
+        clearTimeout(timeOutEvent);
+        Htmls = "";
+    };
+
+	function ViewFullImg(chatid, element) {
+		document.getElementById("img01").src = element.src;
+  		document.getElementById("modal01").style.display = "block";
+
+		//假如是阅后即焚，点击看了一次就删除
+		$api.post('my/chat_deleteimg/'+ chatid, function(data){
+			//true means can only view once
+			if (data) {
+				document.getElementById("own" + chatid).remove();
+			}
+		});
+	}
+
+	function GirlViewFullImg(chatid, element) {
+		document.getElementById("img01").src = element.src;
+  		document.getElementById("modal01").style.display = "block";
+
+		//假如是阅后即焚，点击看了一次就删除
+		$api.post('my/girl_deleteimg/'+ chatid, function(data){
+			//true means can only view once
+			if (data) {
+				document.getElementById("girl" + chatid).remove();
+			}
+		});
+	}
+
+	function girltouchstart(obj) {
+        Htmls = obj.id;
+        timeOutEvent = setTimeout(function(){
+			//复制
+			var clipBoard = api.require('clipBoard');
+			clipBoard.set({
+				value: document.getElementById(obj.id).innerHTML
+			}, function(cop, coperr) {
+				if (cop && cop.status) {
+					var toast = new auiToast();
+					toast.success({ title: '复制成功'});
+				}
+			});
+
+            //因为页面弹动会导致元素一直处于按住的状态，所以超过700毫秒自动清空变量，避免点击其他元素触发事件
+            Htmls = "";
+        }, 700);
+
+        return false;
+    };
+
+    //手释放，取消长按事件
+    function girltouchend() {
+        clearTimeout(timeOutEvent);
+        Htmls = "";
+    };
+
+    //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+
+    function girltouchmove() {
+        clearTimeout(timeOutEvent);
+        Htmls = "";
+    };
+
+	//客服常见问题
+	function getKefuAnswer(qid) {
+		//假如是阅后即焚，点击看了一次就删除
+		$api.post('my/kefu_autoanswer/'+ qid + '/' + api.pageParam.uid, function(answer){
+			//data is the answer
+			//vm.addAutoReply(answer);
+		});
+	}
+</script>
+</html>

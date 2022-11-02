@@ -1,0 +1,97 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人主页</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .user-info {
+            background-color: #ffffff;
+            padding: 0.75rem 0;
+        }
+        img.avatar {
+            display: block;
+            margin: 0 auto;
+            width: 20%;
+        }
+        .aui-list .aui-list-item{
+          min-height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <section id="app" v-cloak>
+        <div class="aui-content user-info aui-text-center aui-margin-b-15">
+            <img :src="APP.getImgUrl(it.avatar)" class="avatar aui-img-round" onerror="this.src='../image/user_header.jpg'">
+            <h2 class="aui-margin-t-15" v-text="it.username"></h2>
+            <div class="aui-row aui-margin-t-15">
+                <div class="aui-col-xs-6 aui-text-right aui-border-r aui-padded-r-10">
+                    关注 <span class="aui-text-danger" v-text="it.follow"></span> 人
+                </div>
+                <div class="aui-col-xs-6 aui-text-left aui-padded-l-10">
+                    被关注 <span class="aui-text-danger" v-text="it.followed"></span> 人
+                </div>
+            </div>
+            <div class="aui-row aui-margin-t-15">
+                <div class="aui-btn" :class="{'aui-btn-outlined':!ok}" tapmode @click="follow()" v-text="ok ? '已关注' : '关注'"></div>
+				<div class="aui-btn aui-btn-outlined aui-margin-l-5" tapmode @click="APP.openWin('chat', {uid: it.uid, username: it.username}, true)">发私信</div>
+            </div>
+        </div>
+        <div class="aui-content">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item" tapmode @click="APP.openWin(['follow_ta', 'header'], {title: 'TA关注的', uid:it.uid, frame:'follow', reload: true}, false, {reload: true})">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-title">TA关注的</div>
+                    </div>
+                </li>
+                <li class="aui-list-item" tapmode @click="APP.openWin(['follow_ta', 'header'], {title: '关注TA的', uid2:it.uid, frame:'follow', reload: true}, false, {reload: true})">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-title">关注TA的</div>
+                    </div>
+                </li>
+                <li class="aui-list-item" tapmode @click="APP.openWin(['main_ta', 'header'], {title: 'TA的动态', uid:it.uid, frame:'main'})">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-title">发布的动态</div>
+                    </div>
+                </li>
+                <li class="aui-list-item" tapmode @click="APP.openWin(['toutiao_ta', 'header'], {title: 'TA的视频', uid:it.uid, frame:'toutiao'})">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-title">发布的视频</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js" ></script>
+<script type="text/javascript" src="../script/lib/app.js" ></script>
+<script type="text/javascript" src="../script/lib/vue.js" ></script>
+<script type="text/javascript">
+apiready = function () {
+    var vm = new Vue({
+    		el: '#app',
+    		data: {it:{}, ok:false},
+    		created: function(){
+            $api.get('app/ta/'+api.pageParam.id, function(data){
+                vm.it = data;
+                vm.ok = data.myfollow;
+                vm.$nextTick(function(){
+                    api.parseTapmode();
+                });
+            });
+        },
+    		methods: {
+            follow: function(){
+                if(!this.it.my) return void APP.openWin('login');
+                $api.post('my/follow', {id: api.pageParam.id}, function(data){
+                    vm.ok = data;
+                });
+            }
+        },
+    });
+}
+</script>
+</html>

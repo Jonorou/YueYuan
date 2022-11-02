@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="css/aui.css" />
+    <title>我的</title>
+</head>
+
+<body>
+    <header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+        <a class="aui-pull-left aui-btn" onclick="closeNow()" tabmode>
+            <!-- api.closeToWin({ name: 'main' }) -->
+            <!-- api.closeWin()-->
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title"></div>
+    </header>
+    <footer id="footer" class="aui-bar aui-bar-tab"></footer>
+</body>
+<script type="text/javascript" src="script/lib/api.js"></script>
+<script type="text/javascript" src="script/lib/app.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var header = $api.dom('#header div.aui-title');
+        $api.text(header, '与 ' + api.pageParam.username + ' 的对话');
+        APP.openFrame({
+            name: 'chat',
+            rect: {
+                header: ['header'],
+                footer: 'footer'
+            }
+        });
+        api.parseTapmode();
+    };
+
+    function closeNow() {
+        if (api.systemType == "ios") {
+            //Temporary 因为导致苹果闪退问题
+            api.closeWin();
+
+            // api.closeFrame({
+            //     name: 'main'
+            // });
+
+
+            // APP.openBar('main', false);
+        } else {
+            api.closeWin();
+        }
+
+
+        // setTimeout(function() {
+        //     api.closeToWin({
+        //         name: 'main'
+        //     });
+        // }, 1000);
+    }
+</script>
+
+</html>

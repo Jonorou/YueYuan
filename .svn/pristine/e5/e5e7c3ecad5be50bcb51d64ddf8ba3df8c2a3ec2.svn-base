@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>个人资料</title>
+    <link rel="stylesheet" type="text/css" href="css/aui.css" />
+</head>
+
+<body>
+    <header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+        <div style="margin-top: 14px;">
+            <a class="aui-pull-left aui-btn" onclick="api.closeToWin({name: 'my'})" tapmode>
+                <span class="aui-iconfont aui-icon-left"></span>
+            </a>
+            <div class="aui-title"><label>个人资料</label></div>
+            <a class="aui-pull-right aui-btn" tapmode onclick="save()" style="color: #000;"><label>保存</label></a>
+        </div>
+      </header>
+</body>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var header = $api.byId('header');
+        $api.fixStatusBar(header);
+        var footer = $api.byId('footer');
+        //加载frame
+        var header_h = $api.offset(header).h;
+        var footer_h = 0; //$api.offset(footer).h;
+        api.openFrame({
+            name: 'userinfo',
+            url: 'widget://html/userinfo.html',
+            rect: {
+                x: 0,
+                y: header_h,
+                w: 'auto',
+                h: api.frameHeight - header_h - footer_h
+            },
+        });
+    };
+
+    function save() {
+        api.execScript({
+            name: 'userinfo',
+            frameName: 'userinfo',
+            script: 'save('+api.pageParam.toMain+');'
+        });
+    }
+</script>
+
+</html>

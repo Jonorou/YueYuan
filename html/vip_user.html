@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>开通会员</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+</head>
+
+<style>
+    .blue_btn {
+        border-radius: 50px;
+        background-color: #E9FFFF;
+        width: 100px;
+        text-align: center;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    
+    .left_space {
+        padding-left: 10px;
+    }
+    
+    .gray_label {
+        font-size: 17px !important;
+        font-weight: bold;
+        padding-top: 5px !important;
+        padding-left: 10px !important;
+        background-color: #E7E7E7;
+        min-height: 30px;
+    }
+    
+    .divBox {
+        border: 1px solid gray;
+        text-align: center;
+        overflow-x: auto;
+        line-height: 22pt;
+    }
+    
+    #vip {
+        table-layout: fixed;
+        overflow: scroll;
+        border-spacing: 10px;
+        border-radius: 10px;
+        width: 100%;
+    }
+    
+    #vip td {
+        width: 150px;
+        padding: 10px 5px;
+        vertical-align: top;
+        box-shadow: 0.25em 0.25em 0.25em rgba( 0, 0, 0, 0.4);
+        border-radius: 15px !important;
+    }
+    
+    #vip td:hover {
+        border-color: #A86ACE;
+        border-width: 4px;
+    }
+</style>
+
+<body>
+    <section class="aui-content">
+        <div id="divNote">
+            <div class="gray_label">会员特权</div>
+
+            <table class="aui-list aui-list-in aui-font-size-12" style="padding-top:15px; padding-left: 5px; width:100%;">
+                <tr>
+                    <td class="blue_btn">
+                        看的更多
+                    </td>
+
+                    <td class="left_space">
+                        每天不限次数查看用户资料，相册
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="blue_btn">
+                        看的更省
+                    </td>
+
+                    <td class="left_space">
+                        每天10次免费查看付费相册，聊天
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="blue_btn">
+                        玩的更爽
+                    </td>
+
+                    <td class="left_space">
+                        免费发布动态，免费发布约会约会节目
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="blue_btn">
+                        玩的更省
+                    </td>
+
+                    <td class="left_space">
+                        免费送女神包夜，后续最低5折下单
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="blue_btn">
+                        安全保障
+                    </td>
+
+                    <td class="left_space">
+                        若茶妹存在欺骗行为，平台担保，假一赔十
+                    </td>
+                </tr>
+            </table>
+
+            <div style="padding-bottom: 20px; background-color:white;"></div>
+            <div class="gray_label">选择套餐</div>
+            <div style="width: 100%; overflow: scroll;">
+                <table id="vip" class="aui-list aui-list-in aui-font-size-12">
+                    <tr>
+                        <td class="divBox">
+                            <span style="width: 100%; display: flex; justify-content: center; height: 60px;">
+                                <img src="../image/icon/icon_member1.png" style="text-align: center;">
+                            </span>
+                            <b>
+                                <div class="aui-font-size-16" >{{arrType[0]}}</div>
+                                {{arrPeriod[0]}}<br>{{arrCos[0]}}
+                            </b>
+                            <br>{{arrRemark[0]}}<br>{{arrRemark1[0]}}<br>{{arrRemark2[0]}}
+                        </td>
+
+                        <td class="divBox">
+                            <span style="width: 100%; display: flex; justify-content: center; height: 60px;">
+                                <img src="../image/icon/icon_member2.png" style="text-align: center;">
+                            </span>
+                            <b>
+                                <div class="aui-font-size-16" >{{arrType[1]}}</div>
+                                {{arrPeriod[1]}}<br>{{arrCos[1]}}
+                            </b>
+                            <br>{{arrRemark[1]}}<br>{{arrRemark1[1]}}<br>{{arrRemark2[1]}}
+                        </td>
+
+                        <td class="divBox">
+                            <span style="width: 100%; display: flex; justify-content: center; height: 60px;">
+                                <img src="../image/icon/icon_member3.png" style="text-align: center;">
+                            </span>
+                            <b>
+                                <div class="aui-font-size-16" >{{arrType[2]}}</div>
+                                {{arrPeriod[2]}}<br>{{arrCos[2]}}
+                            </b>
+                            <br>{{arrRemark[2]}}<br>{{arrRemark1[2]}}<br>{{arrRemark2[2]}}
+                        </td>
+
+                        <td class="divBox">
+                            <span style="width: 100%; display: flex; justify-content: center; height: 60px;">
+                                <img src="../image/icon/icon_member4.png" style="text-align: center;">
+                            </span>
+                            <b>
+                                <div class="aui-font-size-16" >{{arrType[3]}}</div>
+                                {{arrPeriod[3]}}<br>{{arrCos[3]}}
+                            </b>
+                            <br>{{arrRemark[3]}}<br>{{arrRemark1[3]}}<br>{{arrRemark2[3]}}
+                        </td>
+
+                        <td class="divBox">
+                            <span style="width: 100%; display: flex; justify-content: center; height: 60px;">
+                                <img src="../image/icon/icon_member5.png" style="text-align: center;">
+                            </span>
+                            <b>
+                                <div class="aui-font-size-16" >{{arrType[4]}}</div>
+                                {{arrPeriod[4]}}<br>{{arrCos[4]}}
+                            </b>
+                            <br>{{arrRemark[4]}}<br>{{arrRemark1[4]}}<br>{{arrRemark2[4]}}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
+            <div style="padding-bottom: 20px; background-color:white;"></div>
+
+            <div style="margin-left: auto; margin-right: auto; border-radius: 50px; text-align:center; background-color: #A86ACE; color: ghostwhite; padding-top: 6px; padding-bottom: 6px;" class="aui-font-size-14" onclick="save()">
+                立即开通
+            </div>
+            <br>
+        </div>
+
+    </section>
+</body>
+<script type="text/javascript " src="../script/api.js "></script>
+<script type="text/javascript " src="../script/vue.js "></script>
+<script type="text/javascript " src="../script/toast.js "></script>
+<script type="text/javascript " src="../script/common.js "></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript ">
+    var selectedIndex = "";
+    var arrType;
+    var arrPeriod;
+    var arrCos;
+    var arrRemark;
+    var arrRemark1;
+    var arrRemark2;
+
+    apiready = function() {
+        api.parseTapmode();
+        api.getCacheSize(function(ret) {
+            if (ret.size > 0) {
+                $api.text($api.byId('cache'), parseInt(ret.size / 1024 / 1024) + 'M');
+            }
+        });
+
+        vip = new Vue({
+            el: '#vip',
+            data: {
+                it: {}
+            },
+            created: function() {
+                arrType = ["青铜", "白银", "黄金", "钻石", "至尊"];
+                arrPeriod = ["1 个月", "3 个月", "6 个月", "1 年", "永久"];
+                arrCos = ["100 金币", "600 金币", "2000 金币", "6000 金币", "10000 金币"];
+                arrRemark = ["无折扣", "送600包夜", "送2000真人包夜", "送6000神秘包夜", "送10000极品包夜"];
+                arrRemark1 = ["", "假一赔十权益", "全场9折", "全场8折", "全场7折"];
+                arrRemark2 = ["", "", "假一赔十权益", "假一赔十权益", "假一赔十权益"];
+            },
+            mounted: function() {},
+        });
+
+        $('#vip tbody').on('click', 'td', function() {
+            selectedIndex = $(this).closest("td").index();
+        });
+
+    }
+
+    //保存修改
+    function save() {
+        var toast = new auiToast();
+        if (selectedIndex === "") {
+            toast.fail({
+                title: '请选择套餐！'
+            });
+            return false;
+        }
+
+        api.ajax({
+            url: app_url + 'my/upgrade_vip',
+            method: 'post',
+            headers: {
+                token: $api.getStorage('token')
+            },
+            certificate: {
+                path: 'widget://image/client.p12',
+                password: 'dXF5r6fkwIwojeV3'
+            },
+            data: {
+                values: {
+                    sType: arrType[selectedIndex],
+                    sPeriod: arrPeriod[selectedIndex],
+                    sCos: arrCos[selectedIndex],
+                    sRemark: arrRemark[selectedIndex],
+                    sRemark1: arrRemark1[selectedIndex],
+                    sRemark2: arrRemark2[selectedIndex],
+                },
+            }
+        }, function(ret, err) {
+            var toast = new auiToast();
+
+            if (ret.msg != "") {
+                toast.fail({
+                    title: ret.msg
+                });
+            } else {
+                if (ret) {
+                    toast.success({
+                        title: '开通成功'
+                    });
+
+                    api.sendEvent({
+                        name: 'logout'
+                    });
+                }
+            }
+        });
+    }
+
+    //清除缓存
+    function onCache() {
+        api.clearCache(function() {
+            $api.text($api.byId('cache'), '0M');
+            api.toast({
+                msg: '清除完成'
+            });
+        });
+    }
+</script>
+
+</html>

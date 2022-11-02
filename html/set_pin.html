@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>支付密码</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .pin-login {
+            Width: 99%;
+            display: inline-block;
+            border-radius: 10px;
+            margin: auto;
+            font-size: 28px;
+            user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            font-family: sans-serif;
+        }
+        
+        .pin-login__text {
+            margin: 10px auto 10px auto;
+            padding: 10px;
+            display: block;
+            width: 100%;
+            font-size: 0.8em;
+            text-align: left;
+            letter-spacing: 0.8em;
+            border: 1px solid #000;
+            border-radius: 10px;
+            outline: none;
+            cursor: default;
+        }
+        
+        .pin-login__text--error {
+            color: #901818;
+            background: #ffb3b3;
+            animation-name: loginError;
+            animation-duration: 0.1s;
+            animation-iteration-count: 2;
+        }
+        
+        @keyframes loginError {
+            25% {
+                transform: translateX(-3px);
+            }
+            75% {
+                transform: translateX(3px);
+            }
+        }
+        
+        @-moz-keyframes loginError {
+            25% {
+                transform: translateX(-3px);
+            }
+            75% {
+                transform: translateX(3px);
+            }
+        }
+        
+        .pin-login__key {
+            width: 28%;
+            height: 60px;
+            margin: 5px;
+            border: 1px solid #000;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .pin-login__key:active {
+            background: rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content">
+        <ul id="setpin" class="aui-list aui-list-in">
+            <div style="padding-left: 20px; color:#A86ACE">以随时提现（处理时间2个工作日以内）</div>
+
+            <div style="margin-top:30px; text-align: center;">
+
+                <div id="lblSet" style="padding-bottom:30px; font-size: 25px; font-weight: bold;">请设置支付密码</div>
+
+                <div class="pin-login" id="mainPinLogin">
+                    <input id="pay_password" type="password" readonly class="pin-login__text" style="border: 1px solid #000; width: 200px; margin: auto; text-align: center; font-size: 25px;" v-model="pay_password" placeholder="">
+                    <div style="margin-top: 30px;" class="pin-login__numpad">
+                    </div>
+                </div>
+            </div>
+        </ul>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/input.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var toast = new auiToast();
+
+        set = new Vue({
+            el: '#set',
+            data: {
+                it: [],
+                oldpaypassword: ""
+            },
+            mounted: function() {
+                $api.get('my/money', function(data) {
+                    set.oldpaypassword = data.pay_password;
+
+                    if (Number(set.oldpaypassword.length) > 0) {
+                        document.getElementById("lblSet").innerHTML = "请输入支付密码";
+                    } else {
+                        document.getElementById("lblSet").innerHTML = "请设置支付密码";
+                    }
+                });
+            },
+            methods: {}
+        });
+    }
+
+    class PinLogin {
+        constructor({
+            el,
+            loginEndpoint,
+            redirectTo,
+            maxNumbers = 6,
+        }) {
+            this.el = {
+                main: el,
+                numPad: el.querySelector(".pin-login__numpad"),
+                textDisplay: el.querySelector(".pin-login__text")
+            };
+
+            this.loginEndpoint = loginEndpoint;
+            this.redirectTo = redirectTo;
+            this.maxNumbers = maxNumbers;
+            this.value = "";
+
+            this._generatePad();
+        }
+
+        _generatePad() {
+            const padLayout = [
+                "1", "2", "3",
+                "4", "5", "6",
+                "7", "8", "9",
+                "backspace", "0", "done"
+            ];
+
+            padLayout.forEach(key => {
+                const insertBreak = key.search(/[369]/) !== -1;
+                const keyEl = document.createElement("div");
+
+                keyEl.classList.add("pin-login__key");
+                keyEl.classList.toggle("material-icons", isNaN(key));
+                keyEl.textContent = key;
+                keyEl.addEventListener("click", () => {
+                    this._handleKeyPress(key)
+                });
+                this.el.numPad.appendChild(keyEl);
+
+                if (insertBreak) {
+                    this.el.numPad.appendChild(document.createElement("br"));
+                }
+            });
+        }
+
+        _handleKeyPress(key) {
+            switch (key) {
+                case "backspace":
+                    this.value = this.value.substring(0, this.value.length - 1);
+                    break;
+                case "done":
+                    this._save();
+                    break;
+                default:
+                    if (this.value.length < this.maxNumbers && !isNaN(key)) {
+                        this.value += key;
+                    }
+                    break;
+            }
+
+            this._updateValueText();
+        }
+
+        _updateValueText() {
+            this.el.textDisplay.value = "_".repeat(this.value.length);
+            this.el.textDisplay.classList.remove("pin-login__text--error");
+        }
+
+        _save() {
+            if (this.value.length > 0) {
+                var toast = new auiToast();
+                var pay_pwd = `${this.value}`;
+                if (this.value.length < 6) {
+                    toast.fail({
+                        title: '支付密码必须是6位数',
+                    });
+                    return false;
+                }
+
+                $api.post('my/save_pay_password', {
+                    pay_password: pay_pwd
+                }, function(ret, err) {
+                    if (ret == "ok") {
+                        openWin('bind_alipay', true)
+                    } else {
+                        toast.fail({
+                            title: ret,
+                        });
+                    }
+                })
+            }
+        }
+    }
+
+    new PinLogin({
+        el: document.getElementById("mainPinLogin"),
+        loginEndpoint: "login.php",
+        redirectTo: "dashboard.html"
+    });
+</script>
+
+</html>

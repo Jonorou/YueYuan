@@ -1,0 +1,100 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>购买应用</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+    .aui-card-list-footer p{font-size: 0.8rem;color:#3b3b3b}
+    .aui-card-list-footer img{display: inline-block;vertical-align:middle;}
+    </style>
+</head>
+<body class="aui-bg-white">
+    <section class="aui-content" id="app" v-cloak>
+        <div class="aui-tips aui-bg-warning aui-margin-b-10" v-if="it.appstips">
+            <i class="aui-iconfont aui-icon-info"></i>
+            <div class="aui-tips-title aui-ellipsis-1" v-text="it.appstips"></div>
+            <i class="aui-iconfont"></i>
+        </div>
+        <div class="aui-card-list aui-margin-b-0">
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-avatar">
+                    <img class="aui-margin-r-10 aui-img-round" style="width:2rem;" :src="APP.getImgUrl(it.user.avatar)" onerror="this.src='../image/user_header.jpg'"/>
+                </div>
+                <div class="aui-card-list-user-name">
+                    <div v-text="it.user.username"></div>
+					<p v-if="it.trysee > 0 && it.price > 0" v-text="'试用剩余'+it.trysee+'天'"></p>
+                    <p v-else-if="it.isbuy && it.endtime < 0">已过期{{it.endstr}}</p>
+                    <span class="aui-text-info" v-text="it.price > 0 ? (it.isvip ? it.pricevip : it.price)+' 元/月' : '免费'"></span>
+                </div>
+                <div class="aui-card-list-user-info" v-text="APP.dateFormat(it.createtime)"></div>
+            </div>
+            <div class="aui-card-list-content aui-text-center">
+                <div class="aui-font-size-20" v-text="it.title"></div>
+				<div class="aui-margin-t-10">
+				  	编号：<span v-text="it.sn"></span>
+				  	<span class="aui-label aui-label-outlined aui-margin-l-10" @click.stop="copy()">复制</span>
+				</div>
+                <p class="aui-margin-b-10 aui-padded-10" v-text="it.desc"></p>
+            </div>
+            <div class="aui-card-list-footer aui-border-t">
+                <div class="aui-font-size-16 aui-text-default" v-html="it.content"></div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/common.js" ></script>
+<script type="text/javascript" src="../script/lib/api.js" ></script>
+<script type="text/javascript" src="../script/lib/app.js" ></script>
+<script type="text/javascript" src="../script/lib/vue.js" ></script>
+<script type="text/javascript">
+var vm;
+apiready = function () {
+    vm = new Vue({
+            el: '#app',
+            data: {
+            it: {user:{}},
+            id: api.pageParam.id,
+        },
+        created: function(){
+            $api.get('my/roleapps/'+this.id, function(data){
+                vm.it = data;
+                vm.$nextTick(function(){
+                    api.parseTapmode();
+                });
+            });
+        },
+        methods: {
+			//复制
+			copy: function(){
+				var clipBoard = api.require('clipBoard');
+				clipBoard.set({
+					value: this.it.sn
+				}, function(ret, err) {
+					if (ret && ret.status) {
+						APP.toast('success', '复制成功');
+					}
+				});
+			},
+			go: function(){
+				if(this.it.trysee > 0 || this.it.price == 0 || this.it.isbuy && this.it.endtime > 0){
+					APP.openWin('web', {title: this.it.title, url: this.it.appsurl});
+				}else{
+					openDialog('sign', {
+						id:this.id,
+						price: this.it.isvip ? this.it.pricevip : this.it.price,
+						money: this.it.money,
+						bgurl: APP.getImgUrl(this.it.bgurl),
+						url: this.it.appsurl,
+						title: this.it.title,
+					});
+				}
+			}
+        },
+    });
+}
+</script>
+</html>

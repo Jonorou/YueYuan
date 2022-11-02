@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>设置</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .aui-list .aui-list-item {
+            min-height: 1.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="setting" v-cloak>
+        <div class="aui-content">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" onclick="APP.openWin(['notification', 'header'], {title: '新消息通知'}, true)" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">新消息通知</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <br>
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div tapmode>
+                            <input style="position: absolute; left: 37%; margin-top: -0.5rem;" id="phone" type="text" disabled>
+                            <div class="aui-grid-label aui-font-size-14">手机号码</div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" @click="APP.openWin(['change_password', 'header'], {title:'修改登录密码',phone:setting.it.phone, reload: true}, false, {reload: true})" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div>
+                            <div class="aui-grid-label aui-font-size-14">修改登录密码</div>
+                        </div>
+                    </div>
+                </li>
+                <!-- <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" @click="APP.openWin(['change_pay_password', 'header'], {title:'修改支付密码',phone:setting.it.phone, reload: true}, false, {reload: true})" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div>
+                            <div class="aui-grid-label aui-font-size-14">修改支付密码</div>
+                        </div>
+                    </div>
+                </li> -->
+                <!-- <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">手势密码</div>
+                        </div>
+                    </div>
+                </li> -->
+            </ul>
+            <br>
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" onClick="onCache()" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div tapmode>
+                            <input style="position: absolute; left: 82%; margin-top: -0.5rem;" id="cache" type="text" disabled>
+                            <div class="aui-grid-label aui-font-size-14">清除图片缓存</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <br>
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" onclick="APP.openWin(['platform_agreement', 'header'], {title: '平台使用规范'}, true)" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">平台使用规范</div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" onclick="APP.openWin(['user_agreement', 'header'], {title: '他趣用户协议'}, true)" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">用户使用协议</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <br>
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" onclick="APP.openWin(['feedback', 'header'], {title: '意见反馈'}, true)" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">意见反馈</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <br>
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" @click="logout()" tapmode>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">退出登录</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        setting = new Vue({
+            el: '#setting',
+            data: {
+                it: {},
+                ok: false
+            },
+            mounted: function() {
+                //random number between 0 to 200
+                var random_number = Math.floor(Math.random() * 201);
+                document.getElementById("cache").value = random_number + "MB";
+
+                $api.get('my', function(json) {
+                    setting.it = json;
+                    if (json.phone) {
+                        document.getElementById("phone").value = json.phone + "（仅自己可见）";
+                    }
+                });
+            },
+            methods: {
+                logout: function() {
+                    $api.post('login/quit', function() {
+                        $api.rmStorage('token');
+                        //刷新个人中心
+                        api.sendEvent({
+                            name: 'logout'
+                        });
+                        api.closeWin();
+                    });
+                }
+            }
+        });
+    }
+
+    //清除缓存
+    function onCache() {
+        api.clearCache(function() {
+            document.getElementById("cache").value = "0MB";
+            api.toast({
+                msg: '清除完成'
+            });
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>私信列表</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .aui-list .wechat-avatar {
+            width: 3rem;
+        }
+        
+        .wechat-avatar .aui-row-padded {
+            background-color: #dddee0;
+            padding: 0.1rem;
+            border-radius: 0.2rem;
+            margin-left: -0.05rem;
+            margin-right: -0.05rem;
+        }
+        
+        .wechat-avatar .aui-row-padded [class*=aui-col-xs-] {
+            padding: 0.05rem;
+        }
+        
+        .wechat-avatar,
+        .wechat-avatar>img {
+            border-radius: 0.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aui-content aui-margin-b-15" id="app" v-cloak>
+        <section class="aui-content aui-empty" v-if="it.length === 0"></section>
+        <ul class="aui-list aui-media-list">
+            <li class="aui-list-item aui-list-item-middle" v-for="v in it" :key="v.user.uid" tapmode @click="APP.openWin('chat', {uid: v.user.uid, username: v.user.username});">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media wechat-avatar">
+                        <div class="aui-badge" v-if="v.noread > 0" v-text="v.noread"></div>
+                        <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(v.user.avatar)" onerror="this.src='../image/user_header.jpg'" />
+                    </div>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title" v-text="v.user.username"></div>
+                            <div class="aui-list-item-right" v-text="APP.dateFormat(v.createtime)"></div>
+                        </div>
+                        <div class="aui-list-item-text aui-font-size-12 aui-ellipsis-1" v-text="v.content"></div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p class="aui-gird-lable aui-margin-t-10 aui-text-center" v-if="it.length > 0" v-text="loader"></p>
+    </div>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/lib/echo.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                it: [],
+                loader: '正在加载更多...',
+                page: 1,
+            },
+            created: function() {
+                this.list();
+                APP.pullRefresh();
+                // APP.loadMore(function() {
+                //     vm.list();
+                // });
+            },
+            mounted: function() {
+                // this.$nextTick(function() {
+                //     api.parseTapmode();
+                // });
+                // APP.bindEvent();
+            },
+            updated: function() {
+                // echo.init({
+                //     offset: 500,
+                //     throttle: 0
+                // });
+            },
+            methods: {
+                list: function() {
+                    $api.get('my/chatlist', {
+                        page: this.page
+                    }, function(data) {
+                        vm.it = vm.it.concat(data);
+                        vm.page++;
+                        if (data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                    });
+                },
+            },
+        });
+    };
+</script>
+
+</html>

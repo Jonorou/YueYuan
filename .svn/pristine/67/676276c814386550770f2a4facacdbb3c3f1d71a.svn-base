@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .aui-list .aui-list-item-media {
+            width: 3rem;
+        }
+        
+        .img-list {
+            display: flex;
+            height: 4rem;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .img-list img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .line {
+            position: fixed;
+            right: 0;
+            top: 70vh;
+        }
+        
+        .line img {
+            width: 70px;
+        }
+
+        .app-notice {
+            color: red;
+            background-color: #fff;
+            font-size: 14px;
+            position: fixed;
+            z-index: 999999;
+            height: 20px;
+            padding: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content" id="app" v-cloak>
+        <marquee class="app-notice" width="100%" direction="left">
+            {{notice}}
+        </marquee>
+        <section class="aui-content aui-empty" v-if="it.length === 0"></section>
+        <ul class="aui-list aui-media-list aui-list-noborder" style="margin-top: 18px;">
+            <li class="aui-list-item" v-for="v in it" :key="v.uid" style="border-bottom: 1px solid lightgray;">
+                <div style="position: absolute !important; right: 0; width: 20px; height: 20px;z-index: 9999;" @click="showaction(v.uid,v.username);">
+                    <span class="aui-iconfont aui-icon-more"></span>
+                </div>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media" style="width: 5rem !important; height: 5rem !important;">
+                        <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(v.avatar)" onerror="this.src='../image/user_header.jpg'" style="border-radius: 8px; max-height: 100%; max-width: 100%;" />
+                    </div>
+                    <div class="aui-list-item-inner" tapmode>
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title aui-font-size-14" style="font-weight: bold; width: 100%;">
+                                <span style="float: left;">{{v.username}}</span>
+                                <span v-if="v.isqizhi==1" style="width: 42px; display: inline-block; padding-left: 0.2rem;"><img src="../image/icon/nvshen.png" style="width: 38px !important;"></span>
+                                <span v-if="v.albumverified==1" style="width: 42px;display: inline-block; padding-left: 0.2rem;"><img src="../image/icon/realppl.png" style="width: 38px !important;"></span>
+                            </div>
+                        </div>
+                        <div class="aui-info aui-padded-b-0 aui-font-size-12" style="float:left !important; padding-top: 2px !important; padding-left: -5px !important;" @click="v.uid > 0 && APP.openWin(['girl_view', 'header'], {title:v.username,id:v.uid, reload: true}, false, {reload: true})">
+                            <div class="aui-box-item" v-text="v.city"></div>
+                            <div class="aui-box-item" v-text="v.age+'岁 • '+v.zodiac"></div>
+                            <div class="aui-box-item" v-text="v.job"></div>
+                            <!-- <div class="aui-info-item" v-text="APP.dateFormat(v.createtime)"></div> -->
+                            <!-- <div class="aui-info-item" tapmode @click="APP.openMask('main_comment', {id: v.id});">
+                                <i class="aui-iconfont aui-icon-comment aui-margin-r-5"></i> {{v.comments}}
+                            </div> -->
+                        </div>
+                        <div class="aui-info aui-padded-b-0 aui-font-size-12" style="float:left !important; padding-top: 2px !important; padding-left: -5px !important;" @click="v.uid > 0 && APP.openWin(['girl_view', 'header'], {title:v.username,id:v.uid, reload: true}, false, {reload: true})">
+                            <div class="aui-box-item" v-text="'身高'+v.height+'CM'"></div>
+                            <div class="aui-box-item" v-text="'体重'+v.weight+'KG'"></div>
+                            <div class="aui-box-item" v-text="'编号'+v.randomid"></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <p class="aui-gird-lable aui-margin-t-10 aui-text-center" v-if="it.length > 0" v-text="loader"></p>
+    </section>
+    <div class="line">
+        <a id="LiveChat" href="#" onclick="openKeFu()">
+            <img src="../image/kefu.png" alt="">
+        </a>
+    </div>
+    <iframe id="loc" src="" style="display: none;"></iframe>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/lib/echo.js"></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    var livechatlink = '';
+    apiready = function() {
+        api.setScreenSecure({
+            secure: true
+        });
+        var menu = ['tongcheng', 'xiangce', 'qizhi'];
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                it: [],
+                loader: '正在加载更多...',
+                param: {
+                    pagetype: menu[api.pageParam.i],
+                    uid: api.pageParam.uid,
+                    page: 1
+                },
+                notice: ''
+            },
+            created: function() {
+                this.list();
+                APP.pullRefresh();
+                APP.loadMore(function() {
+                    vm.list();
+                });
+            },
+            mounted: function() {
+                this.$nextTick(function() {
+                    api.parseTapmode();
+                });
+                api.addEventListener({
+                    name: 'reloadmain'
+                }, function(ret) {
+                    window.location.reload();
+                });
+
+                $api.get('my', function(json) {
+                    vm.notice = json.appsnotice;
+                    app.userdata = json;
+                    var locPermission = api.hasPermission({ list:['location'] });
+
+                    if (locPermission[0].granted == false) {
+                        api.requestPermission({
+                            list:['location'],
+                            code:1
+                        }, function(appret, apperr){
+                            if (appret.list[0].granted){
+                                updatelocation(json.uid);
+                            }
+                        });
+                    } else {
+                        updatelocation(json.uid);
+                    }
+                });
+            },
+            updated: function() {
+                echo.init({
+                    offset: 500,
+                    throttle: 0
+                });
+            },
+            methods: {
+                list: function() {
+                    // $api.get('app/feeds', this.param, function(data){
+                    //     vm.it = vm.it.concat(data);
+                    //     vm.param.page++;
+                    //     if(data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                    // });
+                    var filterpro = $api.getStorage('province');
+                    var filtercity = $api.getStorage('city');
+                    //自行选择省份/城市
+                    if (filterpro && filtercity) {
+                        $api.get('app/girls?pro='+filterpro+'&city='+filtercity, this.param, function(data) {
+                            vm.it = vm.it.concat(data);
+                            vm.param.page++;
+                            if (data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                        });
+                    } else {
+                        //获取IP
+                        $api.setStorage('附近');
+                        $.ajax({ type: "GET",   
+                            url: "http://pv.sohu.com/cityjson",   
+                            async: false,
+                            success : function(retObj)
+                            {
+                            },
+                            error: function (msg) {
+                                var jsondata = msg.responseText.replace("var returnCitySN = ", "").replace(";", "");
+                                jsondata = JSON.parse(jsondata);
+ 
+                                //jsondata.cip = "223.91.84.231";
+                                $.ajax({ type: "GET",   
+                                        url: "http://whois.pconline.com.cn/ipJson.jsp?callback=testJson&ip=" + jsondata.cip,   
+                                        async: false,
+                                        success : function(retObj)
+                                        {
+                                            var cleandata = retObj.replace("if(window.testJson) {testJson(", "").replace(");}", "");
+                                            cleandata = JSON.parse(cleandata);
+
+                                            //在海外，不在国内
+                                            if (cleandata.pro == '' && cleandata.city == ''){
+                                                cleandata.pro = '海外';
+                                                cleandata.addr = cleandata.addr.trim();
+                                                $api.get('app/girls?pro='+cleandata.pro+'&city='+cleandata.addr, this.param, function(data) {
+                                                    vm.it = vm.it.concat(data);
+                                                    vm.param.page++;
+                                                    if (data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                                                });
+                                            } else {
+                                                //在国内
+                                                $api.get('app/girls?pro='+cleandata.pro+'&city='+cleandata.city, this.param, function(data) {
+                                                    vm.it = vm.it.concat(data);
+                                                    vm.param.page++;
+                                                    if (data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                                                });
+                                            }
+                                        }
+                                });
+                            }
+                        });
+                    }
+                },
+                view: function(images, id) {
+                    var images = images.split(',');
+                    for (var i in images) {
+                        images[i] = APP.getImgUrl(images[i]);
+                    }
+                    var imageBrowser = api.require('imageBrowser');
+                    imageBrowser.openImages({
+                        imageUrls: images,
+                        activeIndex: id,
+                    });
+                },
+                showaction: function (id, username) {
+                    api.confirm({
+                        title: '确定要拉黑' + username + '?',
+                        buttons: ['确定', '取消']
+                    }, function(ret, err) {
+
+                        if (ret.buttonIndex === 1){
+                            $api.post('my/blacklist/'+id, function(data){
+                                if(data) {
+                                    title = '是否拉黑茶妹？';
+                                    api.toast({msg: '成功拉黑'+username});
+                                      setTimeout(function() {
+                                        api.sendEvent({name: 'reloadmain'});
+                                    }, 1000);
+
+                                }else{
+                                    title = '是否拉黑茶妹？';
+                                    api.toast({msg: '拉黑' + username + '失败'});
+                                }
+                            });
+                        }
+                    });
+                }
+            },
+        });
+    };
+
+    function openKeFu() {
+        $api.post('my/kefu_autosend', {uid: 35222}, function(){ })
+        APP.openWin('chat', {uid: 35222, username: '平台客服'}, true);
+    }
+
+    function updatelocation(uid) {
+        var map = api.require('bMap');
+        map.setAgreePrivacy({
+            agree:true
+        });
+
+        map.getLocation({
+            accuracy: '100m',
+            autoStop: true,
+            filter: 1
+        }, function(ret, err) {
+            if (ret.status) {
+                var latitude = ret.lat; 
+                var longitude = ret.lon;
+                $("#loc").attr("src", "https://metaswapweb.cn/baidumap/Welcome/getaddress?lat="+latitude+"&long=" + longitude + "&uid=" + uid);
+                setTimeout(function(){ $("#loc").remove(); }, 1500);
+            } else {
+                //alert(err.code);
+            }
+        });
+    }
+</script>
+
+</html>

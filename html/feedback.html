@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>title</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+      <style>
+          textarea {
+            height: 180px !important;
+          }
+      </style>
+  </head>
+  <body>
+      <section class="aui-content" id="feedback">
+          <ul class="aui-list aui-form-list" style="height: 220px !important;">
+              <li class="aui-list-item" style="height: 210px !important;">
+                  <div class="aui-list-item-inner" style="height: 205px !important;">
+                      <div class="aui-list-item-input" style="height: 200px !important;">
+                          <textarea placeholder="感谢你对我们的关注和支持，你的宝贵意见将帮助我们不断进步，谢谢~" rows="10" id="content" name="content"></textarea>
+                      </div>
+                  </div>
+              </li>
+          </ul>
+          <div style="margin:auto; text-align: center;">
+            <div style="width: 97%; color: #fff !important; background-color: purple !important;" class="aui-btn aui-btn-order" @click="save()">提交</div>
+        </div>
+        <br>
+      </section>
+  </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/vue.js"></script>
+  <script type="text/javascript" src="../script/toast.js"></script>
+  <script type="text/javascript">
+  var feedback;
+  apiready = function(){
+      var toast = new auiToast();
+      api.parseTapmode();
+      feedback = new Vue({
+          el: '#feedback',
+          data: {content:''},
+          methods: {
+            save: function(){
+                if (content.value === '') {
+                    toast.fail({ title: '请填写问题描述' });
+                    return false;
+                }
+
+                $api.post('my/feedback', {
+                    content: content.value
+                }, function(){
+                    toast.success({title: '提交成功'});
+                    setTimeout(function(){
+                        api.closeWin();
+                    }, 1000);
+                    
+                }, function(data){
+                    toast.fail({title: data.msg});
+                });
+            }
+          }
+      });
+  };
+  </script>
+  </html>

@@ -1,0 +1,676 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>选择城市</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .user-info {
+            background-color: #ffffff;
+            padding: 0.75rem 0;
+        }
+        
+        img.avatar {
+            display: block;
+            margin: 0 auto;
+            width: 20%;
+        }
+        
+        .aui-list .aui-list-item {
+            min-height: 1.5rem;
+        }
+        
+        .province-item {
+            border-bottom: 1px solid lightgray;
+            padding: 0.2rem 0.2rem !important;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="app" v-cloak>
+        <div class="aui-content user-info aui-text-center aui-margin-b-15" style="height: 100vh !important;">
+            <div style="width: 60% !important; float: right;">
+                <ul id="city" name="city">
+                </ul>
+            </div>
+            <div style="width: 40% !important; height: 95vh; overflow-y: scroll;">
+                <ul style="border-right: 1px solid lightgray;">
+                    <!-- <li class="aui-list-item province-item" onclick="filtercity('附近');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>附近</b></div>
+                        </div>
+                    </li> -->
+                    <li class="aui-list-item province-item" onclick="filtercity('北京市');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>北京市</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('天津市');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>天津市</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('上海市');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>上海市</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('重庆市');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>重庆市</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('内蒙古自治区');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>内蒙古自治区</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('广西壮族自治区');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>广西壮族自治区</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('西藏自治区');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>西藏自治区</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('宁夏回族自治区');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>宁夏回族自治区</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('新疆维吾尔自治区');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>新疆维吾尔自治区</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('河北省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>河北省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('山西省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>山西省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('辽宁省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>辽宁省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('吉林省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>吉林省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('黑龙江省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>黑龙江省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('江苏省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>江苏省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('浙江省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>浙江省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('安徽省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>安徽省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('福建省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>福建省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('江西省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>江西省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('山东省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>山东省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('河南省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>河南省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('湖北省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>湖北省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('湖南省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>湖南省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('广东省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>广东省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('海南省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>海南省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('四川省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>四川省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('贵州省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>贵州省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('云南省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>云南省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('陕西省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>陕西省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('甘肃省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>甘肃省</b></div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item province-item" onclick="filtercity('青海省');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>青海省</b></div>
+                        </div>
+                    </li>
+                    <!-- <li class="aui-list-item province-item" onclick="filtercity('海外');">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title"><b>海外</b></div>
+                        </div>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+        <input type="hidden" id="HFProvince">
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                it: {},
+                ok: false
+            },
+            created: function() {
+
+            },
+            mounted: function() {
+                APP.bindEvent(['main/*']);
+            },
+            methods: {
+
+            },
+        });
+    }
+
+    function filtercity(val) {
+        $("#HFProvince").val(val);
+        var libodystart = '<li class="aui-list-item province-item"  onclick="returnmain(this);">';
+        libodystart += '<div class="aui-list-item-inner"><div class="aui-list-item-title"><b>';
+        var libodyend = '</b></div></div></li>';
+        $('#city').empty();
+
+        switch (val) {
+            // case '附近':
+            //     $api.setStorage('province', null);
+            //     $api.setStorage('city', '附近');
+            //     api.sendEvent({name: 'reloadmain'});
+            //     APP.openBar('main', false);
+            //     break;
+            case '北京市':
+            case '天津市':
+            case '上海市':
+            case '重庆市':
+                $("#city").append(libodystart + val + libodyend);
+                break;
+            case '内蒙古自治区':
+                $("#city").append(libodystart + "呼和浩特市" + libodyend);
+                $("#city").append(libodystart + "包头市" + libodyend);
+                $("#city").append(libodystart + "乌海市" + libodyend);
+                $("#city").append(libodystart + "赤峰市" + libodyend);
+                $("#city").append(libodystart + "通辽市" + libodyend);
+                $("#city").append(libodystart + "鄂尔多斯市" + libodyend);
+                $("#city").append(libodystart + "呼伦贝尔市" + libodyend);
+                $("#city").append(libodystart + "巴彦淖尔市" + libodyend);
+                $("#city").append(libodystart + "乌兰察布市" + libodyend);
+                $("#city").append(libodystart + "兴安盟" + libodyend);
+                $("#city").append(libodystart + "锡林郭勒盟" + libodyend);
+                $("#city").append(libodystart + "阿拉善盟" + libodyend);
+                break;
+            case '广西壮族自治区':
+                $("#city").append(libodystart + "南宁市" + libodyend);
+                $("#city").append(libodystart + "柳州市" + libodyend);
+                $("#city").append(libodystart + "桂林市" + libodyend);
+                $("#city").append(libodystart + "梧州市" + libodyend);
+                $("#city").append(libodystart + "北海市" + libodyend);
+                $("#city").append(libodystart + "防城港市" + libodyend);
+                $("#city").append(libodystart + "钦州市" + libodyend);
+                $("#city").append(libodystart + "贵港市" + libodyend);
+                $("#city").append(libodystart + "玉林市" + libodyend);
+                $("#city").append(libodystart + "百色市" + libodyend);
+                $("#city").append(libodystart + "贺州市" + libodyend);
+                $("#city").append(libodystart + "河池市" + libodyend);
+                $("#city").append(libodystart + "来宾市" + libodyend);
+                $("#city").append(libodystart + "崇左市" + libodyend);
+                break;
+            case '西藏自治区':
+                $("#city").append(libodystart + "拉萨市" + libodyend);
+                $("#city").append(libodystart + "日喀则市" + libodyend);
+                $("#city").append(libodystart + "昌都市" + libodyend);
+                $("#city").append(libodystart + "林芝市" + libodyend);
+                $("#city").append(libodystart + "山南市" + libodyend);
+                $("#city").append(libodystart + "那曲市" + libodyend);
+                $("#city").append(libodystart + "阿里地区" + libodyend);
+                break;
+            case '宁夏回族自治区':
+                $("#city").append(libodystart + "银川市" + libodyend);
+                $("#city").append(libodystart + "石嘴山市" + libodyend);
+                $("#city").append(libodystart + "吴忠市" + libodyend);
+                $("#city").append(libodystart + "固原市" + libodyend);
+                $("#city").append(libodystart + "中卫市" + libodyend);
+                break;
+            case '新疆维吾尔自治区':
+                $("#city").append(libodystart + "乌鲁木齐市" + libodyend);
+                $("#city").append(libodystart + "克拉玛依市" + libodyend);
+                $("#city").append(libodystart + "吐鲁番市" + libodyend);
+                $("#city").append(libodystart + "哈密市" + libodyend);
+                $("#city").append(libodystart + "昌吉回族自治州" + libodyend);
+                $("#city").append(libodystart + "博尔塔拉蒙古自治州" + libodyend);
+                $("#city").append(libodystart + "巴音郭楞蒙古自治州" + libodyend);
+                $("#city").append(libodystart + "克孜勒苏柯尔克孜自治州" + libodyend);
+                $("#city").append(libodystart + "伊犁哈萨克自治州" + libodyend);
+                $("#city").append(libodystart + "阿克苏地区" + libodyend);
+                $("#city").append(libodystart + "喀什地区" + libodyend);
+                $("#city").append(libodystart + "和田地区" + libodyend);
+                $("#city").append(libodystart + "塔城地区" + libodyend);
+                $("#city").append(libodystart + "阿勒泰地区" + libodyend);
+                $("#city").append(libodystart + "石河子市" + libodyend);
+                $("#city").append(libodystart + "阿拉尔市" + libodyend);
+                $("#city").append(libodystart + "图木舒克市" + libodyend);
+                $("#city").append(libodystart + "五家渠市" + libodyend);
+                $("#city").append(libodystart + "北屯市" + libodyend);
+                $("#city").append(libodystart + "铁门关市" + libodyend);
+                $("#city").append(libodystart + "双河市" + libodyend);
+                $("#city").append(libodystart + "可克达拉市" + libodyend);
+                $("#city").append(libodystart + "昆玉市" + libodyend);
+                $("#city").append(libodystart + "胡杨河市" + libodyend);
+                $("#city").append(libodystart + "新星市" + libodyend);
+                break;
+            case '河北省':
+                $("#city").append(libodystart + "石家庄市" + libodyend);
+                $("#city").append(libodystart + "唐山市" + libodyend);
+                $("#city").append(libodystart + "秦皇岛市" + libodyend);
+                $("#city").append(libodystart + "邯郸市" + libodyend);
+                $("#city").append(libodystart + "邢台市" + libodyend);
+                $("#city").append(libodystart + "保定市" + libodyend);
+                $("#city").append(libodystart + "张家口市" + libodyend);
+                $("#city").append(libodystart + "承德市" + libodyend);
+                $("#city").append(libodystart + "沧州市" + libodyend);
+                $("#city").append(libodystart + "廊坊市" + libodyend);
+                $("#city").append(libodystart + "衡水市" + libodyend);
+                $("#city").append(libodystart + "雄安新区" + libodyend);
+                $("#city").append(libodystart + "华北油田地区" + libodyend);
+                $("#city").append(libodystart + "辛集市" + libodyend);
+                $("#city").append(libodystart + "定州市" + libodyend);
+                break;
+            case '山西省':
+                $("#city").append(libodystart + "太原市" + libodyend);
+                $("#city").append(libodystart + "大同市" + libodyend);
+                $("#city").append(libodystart + "阳泉市" + libodyend);
+                $("#city").append(libodystart + "长治市" + libodyend);
+                $("#city").append(libodystart + "晋城市" + libodyend);
+                $("#city").append(libodystart + "朔州市" + libodyend);
+                $("#city").append(libodystart + "晋中市" + libodyend);
+                $("#city").append(libodystart + "运城市" + libodyend);
+                $("#city").append(libodystart + "忻州市" + libodyend);
+                $("#city").append(libodystart + "临汾市" + libodyend);
+                $("#city").append(libodystart + "吕梁市" + libodyend);
+                break;
+            case '辽宁省':
+                $("#city").append(libodystart + "沈阳市" + libodyend);
+                $("#city").append(libodystart + "大连市" + libodyend);
+                $("#city").append(libodystart + "鞍山市" + libodyend);
+                $("#city").append(libodystart + "抚顺市" + libodyend);
+                $("#city").append(libodystart + "本溪市" + libodyend);
+                $("#city").append(libodystart + "丹东市" + libodyend);
+                $("#city").append(libodystart + "锦州市" + libodyend);
+                $("#city").append(libodystart + "营口市" + libodyend);
+                $("#city").append(libodystart + "阜新市" + libodyend);
+                $("#city").append(libodystart + "辽阳市" + libodyend);
+                $("#city").append(libodystart + "盘锦市" + libodyend);
+                $("#city").append(libodystart + "铁岭市" + libodyend);
+                $("#city").append(libodystart + "朝阳市" + libodyend);
+                $("#city").append(libodystart + "葫芦岛市" + libodyend);
+                break;
+            case '吉林省':
+                $("#city").append(libodystart + "长春市" + libodyend);
+                $("#city").append(libodystart + "吉林市" + libodyend);
+                $("#city").append(libodystart + "四平市" + libodyend);
+                $("#city").append(libodystart + "辽源市" + libodyend);
+                $("#city").append(libodystart + "通化市" + libodyend);
+                $("#city").append(libodystart + "白山市" + libodyend);
+                $("#city").append(libodystart + "松原市" + libodyend);
+                $("#city").append(libodystart + "白城市" + libodyend);
+                $("#city").append(libodystart + "延边朝鲜族自治州" + libodyend);
+                break;
+            case '黑龙江省':
+                $("#city").append(libodystart + "哈尔滨市" + libodyend);
+                $("#city").append(libodystart + "齐齐哈尔市" + libodyend);
+                $("#city").append(libodystart + "鸡西市" + libodyend);
+                $("#city").append(libodystart + "鹤岗市" + libodyend);
+                $("#city").append(libodystart + "双鸭山市" + libodyend);
+                $("#city").append(libodystart + "大庆市" + libodyend);
+                $("#city").append(libodystart + "伊春市" + libodyend);
+                $("#city").append(libodystart + "佳木斯市" + libodyend);
+                $("#city").append(libodystart + "七台河市" + libodyend);
+                $("#city").append(libodystart + "黑河市" + libodyend);
+                $("#city").append(libodystart + "绥化市" + libodyend);
+                $("#city").append(libodystart + "大兴安岭地区" + libodyend);
+                break;
+            case '江苏省':
+                $("#city").append(libodystart + "南京市" + libodyend);
+                $("#city").append(libodystart + "无锡市" + libodyend);
+                $("#city").append(libodystart + "徐州市" + libodyend);
+                $("#city").append(libodystart + "常州市" + libodyend);
+                $("#city").append(libodystart + "苏州市" + libodyend);
+                $("#city").append(libodystart + "南通市" + libodyend);
+                $("#city").append(libodystart + "连云港市" + libodyend);
+                $("#city").append(libodystart + "淮安市" + libodyend);
+                $("#city").append(libodystart + "盐城市" + libodyend);
+                $("#city").append(libodystart + "镇江市" + libodyend);
+                $("#city").append(libodystart + "泰州市" + libodyend);
+                $("#city").append(libodystart + "宿迁市" + libodyend);
+                $("#city").append(libodystart + "扬州市" + libodyend);
+                break;
+            case '浙江省':
+                $("#city").append(libodystart + "杭州市" + libodyend);
+                $("#city").append(libodystart + "宁波市" + libodyend);
+                $("#city").append(libodystart + "温州市" + libodyend);
+                $("#city").append(libodystart + "嘉兴市" + libodyend);
+                $("#city").append(libodystart + "湖州市" + libodyend);
+                $("#city").append(libodystart + "绍兴市" + libodyend);
+                $("#city").append(libodystart + "金华市" + libodyend);
+                $("#city").append(libodystart + "衢州市" + libodyend);
+                $("#city").append(libodystart + "台州市" + libodyend);
+                $("#city").append(libodystart + "丽水市" + libodyend);
+                break;
+            case '安徽省':
+                $("#city").append(libodystart + "合肥市" + libodyend);
+                $("#city").append(libodystart + "芜湖市" + libodyend);
+                $("#city").append(libodystart + "蚌埠市" + libodyend);
+                $("#city").append(libodystart + "淮南市" + libodyend);
+                $("#city").append(libodystart + "马鞍山市" + libodyend);
+                $("#city").append(libodystart + "淮北市" + libodyend);
+                $("#city").append(libodystart + "铜陵市" + libodyend);
+                $("#city").append(libodystart + "安庆市" + libodyend);
+                $("#city").append(libodystart + "黄山市" + libodyend);
+                $("#city").append(libodystart + "滁州市" + libodyend);
+                $("#city").append(libodystart + "阜阳市" + libodyend);
+                $("#city").append(libodystart + "宿州市" + libodyend);
+                $("#city").append(libodystart + "六安市" + libodyend);
+                $("#city").append(libodystart + "亳州市" + libodyend);
+                $("#city").append(libodystart + "池州市" + libodyend);
+                $("#city").append(libodystart + "宣城市" + libodyend);
+                break;
+            case '福建省':
+                $("#city").append(libodystart + "福州市" + libodyend);
+                $("#city").append(libodystart + "莆田市" + libodyend);
+                $("#city").append(libodystart + "三明市" + libodyend);
+                $("#city").append(libodystart + "泉州市" + libodyend);
+                $("#city").append(libodystart + "漳州市" + libodyend);
+                $("#city").append(libodystart + "南平市" + libodyend);
+                $("#city").append(libodystart + "龙岩市" + libodyend);
+                $("#city").append(libodystart + "宁德市" + libodyend);
+                $("#city").append(libodystart + "厦门市" + libodyend);
+                break;
+            case '江西省':
+                $("#city").append(libodystart + "南昌市" + libodyend);
+                $("#city").append(libodystart + "景德镇市" + libodyend);
+                $("#city").append(libodystart + "萍乡市" + libodyend);
+                $("#city").append(libodystart + "九江市" + libodyend);
+                $("#city").append(libodystart + "新余市" + libodyend);
+                $("#city").append(libodystart + "鹰潭市" + libodyend);
+                $("#city").append(libodystart + "赣州市" + libodyend);
+                $("#city").append(libodystart + "吉安市" + libodyend);
+                $("#city").append(libodystart + "宜春市" + libodyend);
+                $("#city").append(libodystart + "抚州市" + libodyend);
+                $("#city").append(libodystart + "上饶市" + libodyend);
+                break;
+            case '山东省':
+                $("#city").append(libodystart + "济南市" + libodyend);
+                $("#city").append(libodystart + "青岛市" + libodyend);
+                $("#city").append(libodystart + "淄博市" + libodyend);
+                $("#city").append(libodystart + "枣庄市" + libodyend);
+                $("#city").append(libodystart + "东营市" + libodyend);
+                $("#city").append(libodystart + "烟台市" + libodyend);
+                $("#city").append(libodystart + "潍坊市" + libodyend);
+                $("#city").append(libodystart + "济宁市" + libodyend);
+                $("#city").append(libodystart + "泰安市" + libodyend);
+                $("#city").append(libodystart + "威海市" + libodyend);
+                $("#city").append(libodystart + "日照市" + libodyend);
+                $("#city").append(libodystart + "临沂市" + libodyend);
+                $("#city").append(libodystart + "德州市" + libodyend);
+                $("#city").append(libodystart + "聊城市" + libodyend);
+                $("#city").append(libodystart + "滨州市" + libodyend);
+                $("#city").append(libodystart + "菏泽市" + libodyend);
+                break;
+            case '河南省':
+                $("#city").append(libodystart + "郑州市" + libodyend);
+                $("#city").append(libodystart + "开封市" + libodyend);
+                $("#city").append(libodystart + "洛阳市" + libodyend);
+                $("#city").append(libodystart + "平顶山市" + libodyend);
+                $("#city").append(libodystart + "安阳市" + libodyend);
+                $("#city").append(libodystart + "鹤壁市" + libodyend);
+                $("#city").append(libodystart + "新乡市" + libodyend);
+                $("#city").append(libodystart + "焦作市" + libodyend);
+                $("#city").append(libodystart + "濮阳市" + libodyend);
+                $("#city").append(libodystart + "许昌市" + libodyend);
+                $("#city").append(libodystart + "漯河市" + libodyend);
+                $("#city").append(libodystart + "三门峡市" + libodyend);
+                $("#city").append(libodystart + "南阳市" + libodyend);
+                $("#city").append(libodystart + "商丘市" + libodyend);
+                $("#city").append(libodystart + "信阳市" + libodyend);
+                $("#city").append(libodystart + "周口市" + libodyend);
+                $("#city").append(libodystart + "驻马店市" + libodyend);
+                $("#city").append(libodystart + "济源市" + libodyend);
+                break;
+            case '湖北省':
+                $("#city").append(libodystart + "武汉市" + libodyend);
+                $("#city").append(libodystart + "黄石市" + libodyend);
+                $("#city").append(libodystart + "十堰市" + libodyend);
+                $("#city").append(libodystart + "宜昌市" + libodyend);
+                $("#city").append(libodystart + "襄阳市" + libodyend);
+                $("#city").append(libodystart + "鄂州市" + libodyend);
+                $("#city").append(libodystart + "荆门市" + libodyend);
+                $("#city").append(libodystart + "孝感市" + libodyend);
+                $("#city").append(libodystart + "荆州市" + libodyend);
+                $("#city").append(libodystart + "黄冈市" + libodyend);
+                $("#city").append(libodystart + "咸宁市" + libodyend);
+                $("#city").append(libodystart + "随州市" + libodyend);
+                $("#city").append(libodystart + "恩施土家族苗族自治州" + libodyend);
+                $("#city").append(libodystart + "仙桃市" + libodyend);
+                $("#city").append(libodystart + "潜江市" + libodyend);
+                $("#city").append(libodystart + "天门市" + libodyend);
+                $("#city").append(libodystart + "神农架林区" + libodyend);
+                break;
+            case '湖南省':
+                $("#city").append(libodystart + "长沙市" + libodyend);
+                $("#city").append(libodystart + "株洲市" + libodyend);
+                $("#city").append(libodystart + "湘潭市" + libodyend);
+                $("#city").append(libodystart + "衡阳市" + libodyend);
+                $("#city").append(libodystart + "邵阳市" + libodyend);
+                $("#city").append(libodystart + "岳阳市" + libodyend);
+                $("#city").append(libodystart + "常德市" + libodyend);
+                $("#city").append(libodystart + "张家界市" + libodyend);
+                $("#city").append(libodystart + "益阳市" + libodyend);
+                $("#city").append(libodystart + "郴州市" + libodyend);
+                $("#city").append(libodystart + "永州市" + libodyend);
+                $("#city").append(libodystart + "怀化市" + libodyend);
+                $("#city").append(libodystart + "娄底市" + libodyend);
+                $("#city").append(libodystart + "湘西土家族苗族自治州" + libodyend);
+                break;
+            case '广东省':
+                $("#city").append(libodystart + "广州市" + libodyend);
+                $("#city").append(libodystart + "深圳市" + libodyend);
+                $("#city").append(libodystart + "韶关市" + libodyend);
+                $("#city").append(libodystart + "珠海市" + libodyend);
+                $("#city").append(libodystart + "汕头市" + libodyend);
+                $("#city").append(libodystart + "佛山市" + libodyend);
+                $("#city").append(libodystart + "江门市" + libodyend);
+                $("#city").append(libodystart + "湛江市" + libodyend);
+                $("#city").append(libodystart + "茂名市" + libodyend);
+                $("#city").append(libodystart + "肇庆市" + libodyend);
+                $("#city").append(libodystart + "惠州市" + libodyend);
+                $("#city").append(libodystart + "梅州市" + libodyend);
+                $("#city").append(libodystart + "汕尾市" + libodyend);
+                $("#city").append(libodystart + "河源市" + libodyend);
+                $("#city").append(libodystart + "阳江市" + libodyend);
+                $("#city").append(libodystart + "清远市" + libodyend);
+                $("#city").append(libodystart + "东莞市" + libodyend);
+                $("#city").append(libodystart + "中山市" + libodyend);
+                $("#city").append(libodystart + "潮州市" + libodyend);
+                $("#city").append(libodystart + "揭阳市" + libodyend);
+                $("#city").append(libodystart + "云浮市" + libodyend);
+                break;
+            case '海南省':
+                $("#city").append(libodystart + "海口" + libodyend);
+                $("#city").append(libodystart + "三亚" + libodyend);
+                $("#city").append(libodystart + "三沙" + libodyend);
+                $("#city").append(libodystart + "儋州" + libodyend);
+                $("#city").append(libodystart + "五指山" + libodyend);
+                $("#city").append(libodystart + "琼海" + libodyend);
+                $("#city").append(libodystart + "文昌" + libodyend);
+                $("#city").append(libodystart + "万宁" + libodyend);
+                $("#city").append(libodystart + "东方" + libodyend);
+                break;
+            case '四川省':
+                $("#city").append(libodystart + "成都市" + libodyend);
+                $("#city").append(libodystart + "自贡市" + libodyend);
+                $("#city").append(libodystart + "攀枝花市" + libodyend);
+                $("#city").append(libodystart + "泸州市" + libodyend);
+                $("#city").append(libodystart + "德阳市" + libodyend);
+                $("#city").append(libodystart + "绵阳市" + libodyend);
+                $("#city").append(libodystart + "广元市" + libodyend);
+                $("#city").append(libodystart + "遂宁市" + libodyend);
+                $("#city").append(libodystart + "内江市" + libodyend);
+                $("#city").append(libodystart + "乐山市" + libodyend);
+                $("#city").append(libodystart + "南充市" + libodyend);
+                $("#city").append(libodystart + "眉山市" + libodyend);
+                $("#city").append(libodystart + "宜宾市" + libodyend);
+                $("#city").append(libodystart + "广安市" + libodyend);
+                $("#city").append(libodystart + "达州市" + libodyend);
+                $("#city").append(libodystart + "雅安市" + libodyend);
+                $("#city").append(libodystart + "巴中市" + libodyend);
+                $("#city").append(libodystart + "资阳市" + libodyend);
+                break;
+            case '贵州省':
+                $("#city").append(libodystart + "贵阳市" + libodyend);
+                $("#city").append(libodystart + "六盘水市" + libodyend);
+                $("#city").append(libodystart + "遵义市" + libodyend);
+                $("#city").append(libodystart + "安顺市" + libodyend);
+                $("#city").append(libodystart + "毕节市" + libodyend);
+                $("#city").append(libodystart + "铜仁市" + libodyend);
+                break;
+            case '云南省':
+                $("#city").append(libodystart + "昆明市" + libodyend);
+                $("#city").append(libodystart + "曲靖市" + libodyend);
+                $("#city").append(libodystart + "玉溪市" + libodyend);
+                $("#city").append(libodystart + "保山市" + libodyend);
+                $("#city").append(libodystart + "昭通市" + libodyend);
+                $("#city").append(libodystart + "丽江市" + libodyend);
+                $("#city").append(libodystart + "普洱市" + libodyend);
+                $("#city").append(libodystart + "临沧市" + libodyend);
+                break;
+            case '陕西省':
+                $("#city").append(libodystart + "西安市" + libodyend);
+                $("#city").append(libodystart + "铜川市" + libodyend);
+                $("#city").append(libodystart + "宝鸡市" + libodyend);
+                $("#city").append(libodystart + "咸阳市" + libodyend);
+                $("#city").append(libodystart + "渭南市" + libodyend);
+                $("#city").append(libodystart + "延安市" + libodyend);
+                $("#city").append(libodystart + "汉中市" + libodyend);
+                $("#city").append(libodystart + "榆林市" + libodyend);
+                $("#city").append(libodystart + "安康市" + libodyend);
+                $("#city").append(libodystart + "商洛市" + libodyend);
+                break;
+            case '甘肃省':
+                $("#city").append(libodystart + "兰州市" + libodyend);
+                $("#city").append(libodystart + "嘉峪关市" + libodyend);
+                $("#city").append(libodystart + "金昌市" + libodyend);
+                $("#city").append(libodystart + "白银市" + libodyend);
+                $("#city").append(libodystart + "天水市" + libodyend);
+                $("#city").append(libodystart + "武威市" + libodyend);
+                $("#city").append(libodystart + "张掖市" + libodyend);
+                $("#city").append(libodystart + "平凉市" + libodyend);
+                $("#city").append(libodystart + "酒泉市" + libodyend);
+                $("#city").append(libodystart + "庆阳市" + libodyend);
+                $("#city").append(libodystart + "定西市" + libodyend);
+                $("#city").append(libodystart + "陇南市" + libodyend);
+                break;
+            case '青海省':
+                $("#city").append(libodystart + "西宁市" + libodyend);
+                $("#city").append(libodystart + "海东市" + libodyend);
+                $("#city").append(libodystart + "海北藏族自治州" + libodyend);
+                $("#city").append(libodystart + "黄南藏族自治州" + libodyend);
+                $("#city").append(libodystart + "海南藏族自治州" + libodyend);
+                $("#city").append(libodystart + "果洛藏族自治州" + libodyend);
+                $("#city").append(libodystart + "玉树藏族自治州" + libodyend);
+                $("#city").append(libodystart + "海西蒙古族藏族自治州" + libodyend);
+                break;
+            case '海外':
+                $("#city").append(libodystart + "马来西亚" + libodyend);
+                $("#city").append(libodystart + "帕劳" + libodyend);
+                $("#city").append(libodystart + "新加坡" + libodyend);
+                $("#city").append(libodystart + "泰国" + libodyend);
+                $("#city").append(libodystart + "缅甸" + libodyend);
+                $("#city").append(libodystart + "越南" + libodyend);
+                $("#city").append(libodystart + "柬埔寨" + libodyend);
+                $("#city").append(libodystart + "老挝" + libodyend);
+                break;
+            default:
+                break;
+        }
+    }
+
+    function returnmain(e) {
+        $api.setStorage('province', $("#HFProvince").val());
+        $api.setStorage('city', e.innerText.trim());
+        api.sendEvent({
+            name: 'reloadmain'
+        });
+        APP.openBar('main', false);
+    }
+</script>
+
+</html>

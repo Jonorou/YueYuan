@@ -1,0 +1,381 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>更改收款账号</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        .aui-radio {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .aui-btn.aui-btn-outlined {
+            border-radius: 50px
+        }
+        
+        .aui-list .aui-list-item-right {
+            position: absolute;
+            right: 0;
+            top: 0.25rem;
+        }
+        
+        .image-list {
+            width: 100%;
+            background-size: cover;
+            padding: 10px 10px;
+            overflow: hidden;
+        }
+        
+        .image-item {
+            width: 30%;
+            height: 25vw;
+            background-image: url(../image/add.png);
+            background-size: 100% 100%;
+            display: inline-block;
+            position: relative;
+            border-radius: 5px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: solid 1px #e8e8e8;
+        }
+        
+        .image-item .image-close {
+            position: absolute;
+            display: inline-block;
+            right: -6px;
+            top: -6px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 12px;
+            background-color: #ff464e;
+            color: #fff;
+            border: solid 1px #f26c85;
+            font-size: 0.6rem;
+            font-weight: 200;
+            z-index: 1;
+        }
+        
+        .divBox {
+            font-size: 10pt;
+            border: 1px solid;
+            text-align: center;
+            overflow-x: auto;
+            padding: 2px 3px;
+        }
+
+        #set {
+            border-spacing: 5px;
+        }
+        
+        #set td:hover {
+            border-color: #A86ACE;
+            background-color: #A86ACE;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content" id="withdraw">
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">称呼</div>
+                    <div class="aui-list-item-input">
+                        <input type="text" id="nickname" name="nickname" placeholder="请填写称呼">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">电话</div>
+                    <div class="aui-list-item-input">
+                        <input type="number" id="phone" name="phone" placeholder="请填写联系电话">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">地址</div>
+                    <div class="aui-list-item-input">
+                        <input type="text" id="address" name="address" placeholder="请填写具体地址">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">暗号</div>
+                    <div class="aui-list-item-input">
+                        <input type="text" id="secretcode" name="secretcode" placeholder="请填写接头暗号">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">时间</div>
+                    <div class="aui-list-item-input">
+                        <input type="datetime-local" name="trxtime" id="trxtime" placeholder="请选择预约时间" >
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">茶妹</div>
+                    <div class="aui-list-item-input">
+                        <input type="text" id="girlmsg" name="girlmsg" placeholder="请正确填写茶妹信息">
+                        <!-- <select id="girlname" style="color: #666666 !important;">
+                            <option value="0" hidden>请正确填写茶妹信息</option>
+                        </select> -->
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">金额</div>
+                    <div class="aui-list-item-input">
+                        <input type="number" name="amount" min="1" id="amount" placeholder="请填写下单金额">
+                    </div>
+                </div>
+            </li>
+            <!-- <li class="aui-list-item aui-padded-10" @click="optionList('trxset', '请选择套餐')">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">选择套餐</div>
+                    <div class="aui-list-item-input">
+                        <input id="trxset" type="text" v-model="trxset" disabled>
+                    </div>
+                </div>
+            </li> -->
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">选择套餐</div>
+                    <div class="aui-list-item-input">
+                        <table id="set" class="aui-list aui-list-in aui-font-size-10">
+                            <tr>
+                                <td class="divBox">其它</td>
+                                <td class="divBox">一节课</td>
+                                <td class="divBox">二节课</td>
+                                <td class="divBox">一夜课</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">备注</div>
+                    <div class="aui-list-item-input">
+                        <input type="text" name="setdescription" id="setdescription" placeholder="备注其它需求">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-header">图集(选填)</li>
+            <li class="aui-list-item">
+                <div class="image-list">
+                    <div v-for="(v,k) in images" class="image-item" :style="add(k)">
+                        <div class="image-close" @click="del(k)" tapmode>X</div>
+                    </div>
+                    <div class="image-item" v-if="images.length < 9" @click="select()" tapmode></div>
+                </div>
+            </li>
+        </ul>
+        <div style="margin:auto; text-align: center;">
+            <div style="width: 97%; color: #fff !important; background-color: purple !important;" class="aui-btn aui-btn-order" @click="save()">确定</div>
+        </div>
+        <br>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/input.js"></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var selectedIndex = "";
+        var arrType;
+        var toast = new auiToast();
+        var withdraw = new Vue({
+            el: '#withdraw',
+            data: {
+                nickname: '',
+                phone: '',
+                address: '',
+                secretcode: '',
+                trxtime: '',
+                amount: '',
+                trxset: '',
+                setdescription: '',
+                girlname: '',
+                images: [],
+                it: {},
+                ok: false,
+            },
+            created: function() {
+                //this.list();
+                arrType = ["其它", "一节课", "二节课", "一夜课"];
+            },
+            mounted: function() {
+                // $api.get('my/withdraw_info', function(json) {
+                //     withdraw.girlname = api.pageParam.title;
+                // });
+            },
+            methods: {
+                // list: function() {
+                //     $api.get('app/girls_list', function(data) {
+                //         for (var i = 0; i < data.length; i++) {
+                //             var girls_opt = document.createElement("option");
+                //             document.getElementById("girlname").innerHTML += '<option value="' + data[i].uid + '">' + data[i].username + '</option>';
+                //         }
+                //     });
+                // },
+                //选择图片
+                select: function() {
+                    api.getPicture({
+                        sourceType: 'library',
+                        encodingType: 'jpg',
+                    }, function(ret, err) {
+                        if (ret && ret.data && withdraw.images.length < 9) {
+                            withdraw.images = withdraw.images.concat(ret.data);
+                        }
+                    });
+                },
+                //添加图片
+                add: function(k) {
+                    return 'background-image:url(' + withdraw.images[k] + ')';
+                },
+                //删除图片
+                del: function(k) {
+                    withdraw.images.splice(k, 1);
+                },
+                save: function() {
+                    if (nickname.value === '') {
+                        toast.fail({
+                            title: '请填写称呼'
+                        });
+                        return false;
+                    }
+                    if (phone.value === '') {
+                        toast.fail({
+                            title: '请填写联系电话'
+                        });
+                        return false;
+                    }
+                    if (address.value === '') {
+                        toast.fail({
+                            title: '请填写具体地址'
+                        });
+                        return false;
+                    }
+                    if (secretcode.value === '') {
+                        toast.fail({
+                            title: '请填写接头暗号'
+                        });
+                        return false;
+                    }
+                    if (trxtime.value === '') {
+                        toast.fail({
+                            title: '请选择预约时间'
+                        });
+                        return false;
+                    }
+                    if (girlmsg.value === '') {
+                        toast.fail({
+                            title: '请填写茶妹信息'
+                        });
+                        return false;
+                    }
+                    if (amount.value === '' || amount.value == 0) {
+                        toast.fail({
+                            title: '请填写下单金额'
+                        });
+                        return false;
+                    }
+                    if (selectedIndex === '') {
+                        toast.fail({
+                            title: '请选择套餐'
+                        });
+                        return false;
+                    }
+
+                    if (setdescription.value === '') {
+                        toast.fail({
+                            title: '请填写备注'
+                        });
+                        return false;
+                    }
+
+                    var json = {};
+                    for (var i in withdraw.images) {
+                        json['image' + i] = withdraw.images[i];
+                    }
+
+                    api.ajax({
+                        url: app_url +'my/order_girl',
+                        method: 'post',
+                        headers: {
+                            token: $api.getStorage('token')
+                        },
+                        certificate: {
+                            path: 'widget://image/client.p12',
+                            password: 'dXF5r6fkwIwojeV3'
+                        },
+                        data: {
+                            values: {
+                                nickname: nickname.value, 
+                                phone: phone.value,
+                                address: address.value,
+                                secretcode: secretcode.value,
+                                trxtime: trxtime.value,
+                                amount: amount.value,
+                                trxset: arrType[selectedIndex],
+                                setdescription: setdescription.value,
+                                gid : 0,
+                                girlmsg: girlmsg.value
+                                },
+                            files: json,
+                        },
+                    },function(ret, err){
+                        if (ret) {
+                            if(ret.code === 0){
+                                APP.toast('success', '提交成功', function(){
+                                    api.closeWin();
+                                });
+                            }else{
+                                APP.toast('fail', ret.msg, function(){ });
+                            }
+                        } else {
+                            APP.toast('fail', ret.msg, function(){ });
+                        }
+                    });
+                },
+            }
+        });
+
+        $('#set tbody').on('click', 'td', function() {
+            selectedIndex = $(this).closest("td").index();
+        });
+    }
+
+    function onfocusType() {
+        document.getElementById("trxtime").type = "datetime-local";
+        document.getElementById("trxtime").click();
+    }
+
+    function onblurType() {
+        if ($("#trxtime").val() == "") {
+            document.getElementById("trxtime").type = "text";
+        } else {
+            document.getElementById("trxtime").type = "datetime-local";
+        }
+    }
+</script>
+
+</html>

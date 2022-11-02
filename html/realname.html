@@ -1,0 +1,380 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>认证身份</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        .image-list {
+        width: 100%;
+        background-size: cover;
+        padding: 10px 10px;
+        overflow: hidden;
+        }
+        .image-item {
+            width: 30%;
+            height: 25vw;
+            background-image: url(../image/add.png);
+            background-size: 100% 100%;
+            display: inline-block;
+            position: relative;
+            border-radius: 5px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: solid 1px #e8e8e8;
+        }
+        .image-item .image-close {
+            position: absolute;
+            display: inline-block;
+            right: -6px;
+            top: -6px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 12px;
+            background-color: #ff464e;
+            color: #fff;
+            border: solid 1px #f26c85;
+            font-size: 0.6rem;
+            font-weight: 200;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content">
+        <div id="divNote">
+            <table class="aui-list aui-list-in">
+                <tr class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <img src="../image/icon/icon_head.png" style="width:5rem; margin-left: auto; margin-right: auto; margin-top: 50px; margin-bottom: 50px;">
+                </tr>
+
+                <tr>
+                    <div class="aui-font-size-14" style="font-weight:bold; text-align: center; margin-top: 10px; margin-bottom: 10px;">
+                        将通过面容识别进行真人认证
+                    </div>
+                </tr>
+
+                <tr>
+                    <div class="aui-font-size-10" style="text-align: center;">
+                        面容识别由系统自动完成，只需要十秒，认证成功后即可免费报名女士节目。
+                    </div>
+                </tr>
+            </table>
+
+            <div style="margin-left: auto; margin-right: auto; border-radius: 50px; width:200px; text-align:center; background-color: #A86ACE; color: ghostwhite; padding-top: 6px; padding-bottom: 6px;" class="aui-font-size-14" onclick="next()">
+                真人认证
+            </div>
+        </div>
+
+        <div id="divRealname" style="display: none; margin-top: 20px;">
+            <div id="tbStep1">
+                <table class="aui-list aui-list-in" style="margin-left:auto !important;margin-right:auto !important;">
+                    <tr>
+                        <td>
+                            <div style="background-color: #ffffff; color: #A86ACE; border: 1px solid #A86ACE; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                上传照片
+                            </div>
+        
+                            <div style="background-color: transparent; color: #c5c5c5; border: none; font-weight: bold; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                ——
+                            </div>
+        
+                            <div style="background-color: #ffffff; color: #c5c5c5; border: 1px solid #c5c5c5; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                面容识别
+                            </div>
+        
+                            <div style="background-color: transparent; color: #c5c5c5; border: none; font-weight: bold; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                ——
+                            </div>
+        
+                            <div style="background-color: #ffffff; color: #000000; border: 1px solid #c5c5c5; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                认证完成
+                            </div>
+                        </td>
+                        
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <div class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="background-color: #E7E7E7; margin-top: 15px; min-height: 15px; min-width: 100px;"></div>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <div style="padding-left: 15px; color: #000000; font-weight: bold; padding-top:15px; padding-bottom: 15px;" class="aui-font-size-14">
+                                你的照片
+                            </div>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <div style="padding-left: 15px; color: #b3b3b3;" class="aui-font-size-12">
+                                1、请上传1张形象良好的正脸照片
+                            </div>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <div style="padding-left: 15px; color: #b3b3b3;" class="aui-font-size-12">
+                                2、保证照片像素清晰、五官可见
+                            </div>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <div style="padding-left: 15px; color: #b3b3b3;" class="aui-font-size-12">
+                                3、通过认证后，此照片将上传到你的相册
+                            </div>
+                        </td>
+                    </tr>
+    
+                    <tr>
+                        <td>
+                            <div class="image-list">
+                                <div v-for="(v,k) in images" class="image-item" :style="add(k)">
+                                    <div class="image-close" @click="del(k)" tapmode>X</div>
+                                </div>
+                                <div class="image-item" v-if="images.length < 1" @click="select()" tapmode></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="aui-content-padded">
+                    <div class="aui-font-size-14 btn-purple" onclick="toStep2()">下一步</div>
+                </div>
+            </div>
+            <div id="tbStep2">
+                <table  class="aui-list aui-list-in" style="margin-left:auto !important;margin-right:auto !important;">
+                    <tr>
+                        <td>
+                            <div style="background-color: #ffffff; color: #c5c5c5; border: 1px solid #A86ACE; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                上传照片
+                            </div>
+        
+                            <div style="background-color: transparent; color: #c5c5c5; border: none; font-weight: bold; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                ——
+                            </div>
+        
+                            <div style="background-color: #ffffff; color: #A86ACE; border: 1px solid #c5c5c5; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                面容识别
+                            </div>
+        
+                            <div style="background-color: transparent; color: #c5c5c5; border: none; font-weight: bold; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                ——
+                            </div>
+        
+                            <div style="background-color: #ffffff; color: #000000; border: 1px solid #c5c5c5; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                认证完成
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="padding-left: 15px; color: #000000; font-weight: bold; padding-top:15px; padding-bottom: 15px;" class="aui-font-size-14">
+                                打开相机
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="image-list">
+                                <div v-for="(v,k) in camera" class="image-item" :style="addcamera(k)">
+                                    <div class="image-close" @click="delcamera(k)" tapmode>X</div>
+                                </div>
+                                <div class="image-item" v-if="camera.length < 1" @click="selectcamera()" tapmode></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="aui-content-padded">
+                    <div class="aui-font-size-14 btn-purple" onclick="save()">提交</div>
+                </div>
+            </div>
+            <div id="tbStep3">
+                <table  class="aui-list aui-list-in" style="margin-left:auto !important;margin-right:auto !important;">
+                    <tr>
+                        <td>
+                            <div style="background-color: #ffffff; color: #c5c5c5; border: 1px solid #A86ACE; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                上传照片
+                            </div>
+        
+                            <div style="background-color: transparent; color: #c5c5c5; border: none; font-weight: bold; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                ——
+                            </div>
+        
+                            <div style="background-color: #ffffff; color: #c5c5c5; border: 1px solid #c5c5c5; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                面容识别
+                            </div>
+        
+                            <div style="background-color: transparent; color: #c5c5c5; border: none; font-weight: bold; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                ——
+                            </div>
+        
+                            <div style="background-color: #ffffff; color: #A86ACE; border: 1px solid #c5c5c5; font-weight: bold; border-radius: 50px; width:23%; text-align:center; padding-bottom: 6px;" class="aui-font-size-14 aui-btn">
+                                认证完成
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="padding-left: 15px; color: #000000; font-weight: bold; padding-top:15px; padding-bottom: 15px; text-align: center;" class="aui-font-size-14">
+                                提交成功
+                            </div>
+                        </td>
+                    </tr>
+                   
+                </table>
+                <div class="aui-content-padded">
+                    <div class="aui-font-size-14 btn-purple" onclick="APP.openBar('my', true)">返回主页</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/input.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        api.getCacheSize(function(ret) {
+            if (ret.size > 0) {
+                $api.text($api.byId('cache'), parseInt(ret.size / 1024 / 1024) + 'M');
+            }
+        });
+        divRealname = new Vue({
+            el: '#divRealname',
+            data: {
+                setavatar: false,
+                it: {},
+                images:[],
+                camera:[]
+            },
+            methods: {
+                //选择图片
+                select: function(){
+                    api.getPicture({
+                        sourceType: 'library',
+                        encodingType: 'jpg',
+                    }, function(ret, err) {
+                        if (ret && ret.data && divRealname.images.length < 9) {
+                            divRealname.images = divRealname.images.concat(ret.data);
+                        }
+                    });
+                },
+                //添加图片
+                add: function(k){
+                    return 'background-image:url('+ divRealname.images[k] +')';
+                },
+                //删除图片
+                del: function(k){
+                    divRealname.images.splice(k, 1);
+                },
+
+                //选择图片
+                selectcamera: function(){
+                    api.getPicture({
+                        sourceType: 'camera',
+                        direction: 'front',
+                    }, function(ret, err) {
+                        if (ret && ret.data) {
+                            divRealname.camera = divRealname.camera.concat(ret.data);
+                        }
+                    });
+
+                    // api.getPicture({
+                    //     sourceType: 'library',
+                    //     encodingType: 'jpg',
+                    // }, function(ret, err) {
+                    //     if (ret && ret.data && divRealname.camera.length < 9) {
+                    //         divRealname.camera = divRealname.camera.concat(ret.data);
+                    //     }
+                    // });
+                },
+                //添加图片
+                addcamera: function(k){
+                    return 'background-image:url('+ divRealname.camera[k] +')';
+                },
+                //删除图片
+                delcamera: function(k){
+                    divRealname.camera.splice(k, 1);
+                },
+            }
+        });
+    }
+
+    function next() {
+        document.getElementById("divNote").style.display = "none";
+        document.getElementById("divRealname").style.display = "block";
+        document.getElementById("tbStep2").style.display = "none";
+        document.getElementById("tbStep3").style.display = "none";
+    }
+
+    function toStep2() {
+        var toast = new auiToast();
+        if(divRealname.images == '' || divRealname.images == undefined) {
+            toast.fail({ title: '请上传身份证' });
+        } else {
+            document.getElementById("tbStep1").style.display = "none";
+            document.getElementById("tbStep2").style.display = "block";
+        }
+    }
+
+    //保存修改
+    function save() {
+        var json = {};
+        var toast = new auiToast();
+                
+        for (var i in divRealname.images) {
+            json['image'+i] = divRealname.images[i];
+        }
+
+        for (var i in divRealname.camera) {
+            json['image1'] = divRealname.camera[i];
+        }
+  
+        if(divRealname.camera == '' || divRealname.camera == undefined) {
+            toast.fail({ title: '请上传自拍' });
+        }
+
+        api.ajax({
+            url: app_url + 'my/realname',
+            method: 'post',
+            headers: {
+                token: $api.getStorage('token')
+            },
+            certificate: {
+                path: 'widget://image/client.p12',
+                password: 'dXF5r6fkwIwojeV3'
+            },
+            data: {
+                values: {},
+                files: json
+            }
+        }, function(ret, err) {
+            if (ret) {
+                document.getElementById("tbStep2").style.display = "none";
+                document.getElementById("tbStep3").style.display = "block";
+
+                var toast = new auiToast();
+                toast.success({ title: '提交成功' });
+                api.sendEvent({ name: 'logout' });
+            }
+        });
+    }
+</script>
+
+</html>

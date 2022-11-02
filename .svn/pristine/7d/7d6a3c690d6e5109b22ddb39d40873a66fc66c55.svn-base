@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <title>购买记录</title>
+      <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+  </head>
+  <body>
+      <section class="aui-content" id="appslist" v-cloak>
+          <ul class="aui-list aui-media-list">
+              <li class="aui-list-item" v-for="v in it" :key="v.id">
+                  <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title" v-text="v.title"></div>
+                            <div class="aui-list-item-right" v-text="v.money+'元 / '+v.num+'个月'"></div>
+                        </div>
+                        <div class="aui-list-item-text aui-ellipsis-1">
+                            {{APP.dateFormat(v.createtime, true)}} ~ {{APP.dateFormat(v.endtime, true)}}
+                        </div>
+                    </div>
+                  </div>
+              </li>
+          </ul>
+          <div class="aui-card-list-footer aui-text-center" style="clear:both" v-text="loader"></div>
+      </section>
+  </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/lib/app.js"></script>
+  <script type="text/javascript" src="../script/echo.js"></script>
+  <script type="text/javascript" src="../script/vue.js"></script>
+  <script type="text/javascript" src="../script/common.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+          api.parseTapmode();
+          pullRefresh();
+          var appslist = new Vue({
+              el: '#appslist',
+              data: {
+                  it: [],
+                  offset: 0,
+                  loader: '正在加载更多...'
+              },
+              mounted: function(){
+                  this.add(); //初始化
+                  loadMore(function(){appslist.add()}); //下拉加载
+              },
+              updated: function(){
+                  echo.init({offset: 500, throttle: 0}); //图片懒加载
+              },
+              methods: {
+                  add: function(){
+                      var limit = 6;
+                      var url = 'my/orders/apps.title,orders.money,orders.num,orders.createtime,orders.endtime/';
+                      url += limit +'/'+ this.offset;
+                      $api.get(url, function(json){
+                          appslist.offset += limit;
+                          appslist.it = appslist.it.concat(json);
+                          if(json.length < limit) appslist.loader = '已到底部'
+                      });
+                  },
+              }
+          });
+      };
+  </script>
+  </html>

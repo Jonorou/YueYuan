@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+      <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+      <title>购买应用</title>
+      <link rel="stylesheet" type="text/css" href="css/aui.css"/>
+  </head>
+  <body>
+    <header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+        <a class="aui-pull-left aui-btn" onclick="api.closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">购买应用</div>
+		<a class="aui-pull-right aui-btn" onclick="favor()">
+            <span class="aui-iconfont aui-icon-more"></span>
+        </a>
+    </header>
+    <footer id="footer" class="aui-bar aui-bar-tab">
+		<div class="aui-bar-tab-item aui-padded-15">
+            <div class="aui-btn aui-btn-info aui-btn-block" onclick="go()" tapmode>进入</div>
+        </div>
+    </footer>
+  </body>
+  <script type="text/javascript" src="script/lib/api.js"></script>
+  <script type="text/javascript" src="script/lib/app.js"></script>
+  <script type="text/javascript" src="script/common.js"></script>
+  <script type="text/javascript">
+  apiready = function(){
+      api.parseTapmode();
+      var header = $api.byId('header');
+      $api.fixStatusBar(header);
+      var footer = $api.byId('footer');
+      //加载frame
+      var header_h = $api.offset(header).h;
+      var footer_h = $api.offset(footer).h;
+      api.openFrame({
+          name: 'buluo_tips',
+          url: 'widget://html/buluo_tips.html',
+          pageParam: api.pageParam,
+          bounces: false,
+          rect: {x:0, y:header_h, w:'auto', h:api.frameHeight-header_h-footer_h}
+      });
+  }
+  function go(){
+      api.execScript({
+          name: 'buluo_tips',
+          frameName: 'buluo_tips',
+          script: 'vm.go();'
+      });
+  };
+  var title = '是否取消收藏该应用？';
+  function favor(){
+	  	api.confirm({
+		    title: title,
+		    buttons: ['确定', '关闭']
+		}, function(ret, err) {
+		    if(ret.buttonIndex === 1){
+				var id = api.pageParam.id;
+				$api.post('my/favor/'+id, function(data){
+				  if(data) {
+					  title = '是否取消收藏该应用？';
+					  api.toast({msg: '已收藏'});
+				  }else{
+					  title = '是否收藏该应用？';
+					  api.toast({msg: '已取消收藏'});
+				  }
+			  });
+			}
+		});
+	};
+  </script>
+  </html>

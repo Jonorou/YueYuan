@@ -1,0 +1,556 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>更改收款账号</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        .aui-radio {
+            width: 1rem;
+            height: 1rem;
+        }
+        
+        .aui-btn.aui-btn-outlined {
+            border-radius: 50px
+        }
+        
+        .aui-list .aui-list-item-right {
+            position: absolute;
+            right: 0;
+            top: 0.25rem;
+        }
+        
+        .pin-login {
+            Width: 99%;
+            display: inline-block;
+            border-radius: 10px;
+            margin: auto;
+            font-size: 28px;
+            user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-user-select: none;
+            font-family: sans-serif;
+        }
+        
+        .pin-login__text {
+            margin: 10px auto 10px auto;
+            padding: 10px;
+            display: block;
+            width: 100%;
+            font-size: 0.8em;
+            text-align: left;
+            letter-spacing: 0.8em;
+            border: 1px solid #000;
+            border-radius: 10px;
+            outline: none;
+            cursor: default;
+        }
+        
+        .pin-login__text--error {
+            color: #901818;
+            background: #ffb3b3;
+            animation-name: loginError;
+            animation-duration: 0.1s;
+            animation-iteration-count: 2;
+        }
+        
+        @keyframes loginError {
+            25% {
+                transform: translateX(-3px);
+            }
+            75% {
+                transform: translateX(3px);
+            }
+        }
+        
+        @-moz-keyframes loginError {
+            25% {
+                transform: translateX(-3px);
+            }
+            75% {
+                transform: translateX(3px);
+            }
+        }
+        
+        .pin-login__key {
+            width: 28%;
+            height: 60px;
+            margin: 5px;
+            border: 1px solid #000;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .pin-login__key:active {
+            background: rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content">
+        <ul id="withdraw" class="aui-list aui-list-in">
+            <ul id="divType" class="aui-list aui-form-list">
+                <li class="aui-list-item" onclick="selectBank()">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label aui-text-primary"><img src="../image/icon/icon_card.png" style="margin-right:0.5rem; width:1.5rem;">银行卡提现</div>
+                        <input type="checkbox" id="typeBank" name="typeBank" style="width: 2rem;">
+                    </div>
+                </li>
+
+                <li class="aui-list-item" onclick="selectAlipay()">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label aui-text-primary"><img src="../image/alipay.png" style="margin-right:0.8rem; width:1.2rem;">支付宝提现</div>
+                        <input type="checkbox" id="typeAlipay" name="typeAlipay" style="width: 2rem;">
+                    </div>
+                </li>
+            </ul>
+
+            <ul id="divBank" class="aui-list aui-form-list">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 130px;">
+                        <div class="aui-list-item-title">银行姓名</div>
+                    </div>
+                    <input id="payeeName" type="text" v-model="it.payeeName" placeholder="请填写银行姓名">
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 130px;">
+                        <div class="aui-list-item-title">开户银行</div>
+                    </div>
+                    <input id="bankName" type="text" v-model="it.bankName" placeholder="请填写开户银行">
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 130px;">
+                        <div class="aui-list-item-title">银行账号</div>
+                    </div>
+                    <input id="bankAcc" type="text" v-model="it.bankAcc" placeholder="请填写银行账号">
+                </li>
+            </ul>
+
+            <ul id="divAlipay" style="display: none;" class="aui-list aui-form-list">
+                <li id="alipay1" class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 200px;">
+                        <div class="aui-list-item-title">支付宝昵称</div>
+                    </div>
+                    <input id="alipayName" type="text" v-model="it.alipayName" placeholder="请填写支付宝昵称">
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 200px;">
+                        <div class="aui-list-item-title">支付宝账号</div>
+                    </div>
+                    <input id="alipayAcc" type="text" v-model="it.alipayAcc" placeholder="请填写支付宝账号">
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 125px;">
+                        <div class="aui-list-item-title">支付宝收款码</div>
+                    </div>
+                    <!-- <input id="alipayQrcode" type="text" v-model="it.alipayQrcode"> -->
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <img id="alipayQrcode" src="../image/add.png" onclick="imgPath()" style="width:5rem;">
+                </li>
+            </ul>
+
+            <ul id="divAmt" class="aui-list aui-form-list">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 130px;">
+                        <div class="aui-list-item-title">提现金额</div>
+                    </div>
+                    <input id="amount" type="text" v-model="it.amount" placeholder="请填写提现金额">
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 95px;">
+                        <div class="aui-list-item-title">提现理由</div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <input id="reason" type="text" v-model="it.reason" placeholder="请填写提现理由">
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" style="width: 95px;">
+                        <div class="aui-list-item-title">备注</div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <input id="remark" type="text" v-model="it.remark" placeholder="请填写备注">
+                </li>
+            </ul>
+        </ul>
+
+        <ul id="setpin" class="aui-list aui-list-in" style="display:none; width: 100%; height: 100%; z-index:99; position: absolute; top:0px; left:0px; margin:auto;">
+            <div style="padding-left: 20px; color:#A86ACE">以随时提现（处理时间2个工作日以内）</div>
+
+            <div style="margin-top:30px; text-align: center;">
+
+                <div id="lblSet" style="padding-bottom:30px; font-size: 25px; font-weight: bold;">请输入支付密码</div>
+
+                <div class="pin-login" id="mainPinLogin">
+                    <input id="pay_password" type="password" readonly class="pin-login__text" style="border: 1px solid #000; width: 200px; margin: auto; text-align: center; font-size: 25px;" v-model="pay_password" placeholder="">
+                    <div style="margin-top: 30px;" class="pin-login__numpad">
+                    </div>
+                </div>
+            </div>
+        </ul>
+
+        <div class=" aui-content-padded ">
+            <div style="background-color:#A86ACE !important; color: #fff !important;" class="aui-btn aui-btn-block aui-font-size-20" onclick="save(true)">确定</div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/input.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var toast = new auiToast();
+
+        withdraw = new Vue({
+            el: '#recharge',
+            data: {
+                setavatar: false,
+                it: {}
+            },
+            mounted: function() {
+                document.getElementById("typeBank").checked = true;
+            },
+            methods: {}
+        });
+    }
+
+    //保存修改
+    function save(showSetPin) {
+        var payee_Name = document.getElementById("payeeName").value;
+        var bank_Name = document.getElementById("bankName").value;
+        var bank_Acc = document.getElementById("bankAcc").value;
+        var alipay_Name = document.getElementById("alipayName").value;
+        var alipay_Acc = document.getElementById("alipayAcc").value;
+        var alipay_Qrcode = document.getElementById("alipayQrcode").src;
+        var w_amount = document.getElementById("amount").value;
+        var w_reason = document.getElementById("reason").value;
+        var w_remark = document.getElementById("remark").value;
+
+        var w_type = 1;
+        if (document.getElementById("typeAlipay").checked == true) {
+            w_type = 2;
+        }
+
+        var toast = new auiToast();
+
+        if (payee_Name == '' && document.getElementById("typeBank").checked == true) {
+            toast.fail({
+                title: '请填写银行姓名'
+            });
+            return false;
+        }
+        if (bank_Name == '' && document.getElementById("typeBank").checked == true) {
+            toast.fail({
+                title: '请填写开户银行'
+            });
+            return false;
+        }
+        if (bank_Acc == '' && document.getElementById("typeBank").checked == true) {
+            toast.fail({
+                title: '请填写银行账号'
+            });
+            return false;
+        }
+        if (alipay_Name == '' && document.getElementById("typeAlipay").checked == true) {
+            toast.fail({
+                title: '请填写支付宝昵称'
+            });
+            return false;
+        }
+        if (alipay_Acc == '' && document.getElementById("typeAlipay").checked == true) {
+            toast.fail({
+                title: '请填写支付宝账号'
+            });
+            return false;
+        }
+        if (alipay_Qrcode == '' && document.getElementById("typeAlipay").checked == true) {
+            toast.fail({
+                title: '请上传支付宝收款码'
+            });
+            return false;
+        }
+        if (w_amount == '' || w_amount == 0) {
+            toast.fail({
+                title: '请填写提现金额'
+            });
+            return false;
+        }
+        if (w_amount < 100) {
+            toast.fail({
+                title: '最低提现金额为100'
+            });
+            return false;
+        }
+        if (w_reason == '') {
+            toast.fail({
+                title: '请填写提现理由'
+            });
+            return false;
+        }
+        if (w_remark == '') {
+            toast.fail({
+                title: '请填写备注'
+            });
+            return false;
+        }
+
+        if (showSetPin == true) {
+            document.getElementById("setpin").style.display = "block";
+        } else {
+            var json = {};
+            json['image0'] = alipay_Qrcode;
+
+            api.ajax({
+                url: app_url + 'my/withdraw',
+                method: 'post',
+                headers: {
+                    token: $api.getStorage('token')
+                },
+                certificate: {
+                    path: 'widget://image/client.p12',
+                    password: 'dXF5r6fkwIwojeV3'
+                },
+                data: {
+                    values: {
+                        payeeName: payee_Name,
+                        bankName: bank_Name,
+                        bankAcc: bank_Acc,
+                        alipayName: alipay_Name,
+                        alipayAcc: alipay_Acc,
+                        amount: w_amount,
+                        reason: w_reason,
+                        remark: w_remark,
+                        withdrawtype: w_type,
+                    },
+                    files: json
+                }
+            }, function(ret, err) {
+                if (ret.data) {
+                    var toast = new auiToast();
+                    toast.success({
+                        title: '提交成功'
+                    });
+                    setTimeout(function() {
+                        api.closeWin();
+                    }, 1000);
+                    api.sendEvent({
+                        name: 'reload'
+                    });
+                    // api.sendEvent({ name: 'logout' });
+
+                    document.getElementById("payeeName").value = "";
+                    document.getElementById("bankName").value = "";
+                    document.getElementById("bankAcc").value = "";
+                    document.getElementById("alipayName").value = "";
+                    document.getElementById("alipayAcc").value = "";
+                    document.getElementById("alipayQrcode").value = "";
+                    document.getElementById("amount").value = "";
+                    document.getElementById("reason").value = "";
+                    document.getElementById("remark").value = "";
+                } else {
+                    var toast = new auiToast();
+                    toast.fail({
+                        title: '余额不足'
+                    });
+                    return false;
+                }
+            });
+        }
+    }
+
+    //选择本地照片
+    function setimgPath(img) {
+        withdraw.it.setimgPath = true;
+        withdraw.it.alipayQrcode = img;
+    }
+
+    //打开拍照或相册
+    function getPicture(index) {
+        if (index === 1) {
+            var sourceType = 'camera';
+        } else
+        if (index === 2) {
+            var sourceType = 'album';
+        }
+        if (sourceType) {
+            api.getPicture({
+                sourceType: sourceType,
+                direction: 'front',
+            }, function(ret, err) {
+                if (ret && ret.data) {
+                    document.getElementById("alipayQrcode").src = ret.data;
+                    setimgPath(ret.data);
+                    //alipay_Qrcode = ret.data;
+                    //var json = {};
+                    //json['image0'] = alb.data;
+                    //裁剪窗口
+                    // api.openWin({
+                    //     name: 'imageClip',
+                    //     url: 'widget://imageClip.html',
+                    //     pageParam: {
+                    //         srcPath: ret.data,
+                    //     }
+                    // });
+                }
+            });
+        }
+    }
+
+    function selectBank() {
+        document.getElementById("typeBank").checked = true;
+        document.getElementById("typeAlipay").checked = false;
+
+        document.getElementById("divAlipay").style.display = "none";
+        document.getElementById("divBank").style.display = "block";
+    }
+
+    function selectAlipay() {
+        document.getElementById("typeBank").checked = false;
+        document.getElementById("typeAlipay").checked = true;
+
+        document.getElementById("divAlipay").style.display = "block";
+        document.getElementById("divBank").style.display = "none";
+    }
+
+    function imgPath() {
+        api.actionSheet({
+            title: '上传照片',
+            buttons: ['拍照', '从手机相册选择'],
+            cancelTitle: '取消'
+        }, function(ret, err) {
+            if (ret) {
+                getPicture(ret.buttonIndex);
+            }
+        });
+    }
+
+    class PinLogin {
+        constructor({
+            el,
+            loginEndpoint,
+            redirectTo,
+            maxNumbers = 6,
+        }) {
+            this.el = {
+                main: el,
+                numPad: el.querySelector(".pin-login__numpad"),
+                textDisplay: el.querySelector(".pin-login__text")
+            };
+
+            this.loginEndpoint = loginEndpoint;
+            this.redirectTo = redirectTo;
+            this.maxNumbers = maxNumbers;
+            this.value = "";
+
+            this._generatePad();
+        }
+
+        _generatePad() {
+            const padLayout = [
+                "1", "2", "3",
+                "4", "5", "6",
+                "7", "8", "9",
+                "backspace", "0", "done"
+            ];
+
+            padLayout.forEach(key => {
+                const insertBreak = key.search(/[369]/) !== -1;
+                const keyEl = document.createElement("div");
+
+                keyEl.classList.add("pin-login__key");
+                keyEl.classList.toggle("material-icons", isNaN(key));
+                keyEl.textContent = key;
+                keyEl.addEventListener("click", () => {
+                    this._handleKeyPress(key)
+                });
+                this.el.numPad.appendChild(keyEl);
+
+                if (insertBreak) {
+                    this.el.numPad.appendChild(document.createElement("br"));
+                }
+            });
+        }
+
+        _handleKeyPress(key) {
+            switch (key) {
+                case "backspace":
+                    this.value = this.value.substring(0, this.value.length - 1);
+                    break;
+                case "done":
+                    this._save();
+                    break;
+                default:
+                    if (this.value.length < this.maxNumbers && !isNaN(key)) {
+                        this.value += key;
+                    }
+                    break;
+            }
+
+            this._updateValueText();
+        }
+
+        _updateValueText() {
+            this.el.textDisplay.value = "_".repeat(this.value.length);
+            this.el.textDisplay.classList.remove("pin-login__text--error");
+        }
+
+        _save() {
+            if (this.value.length > 0) {
+                var toast = new auiToast();
+                var pay_pwd = `${this.value}`;
+                if (this.value.length < 6) {
+                    toast.fail({
+                        title: '支付密码必须是6位数',
+                    });
+                    return false;
+                }
+
+                $api.post('my/save_pay_password', {
+                    pay_password: pay_pwd
+                }, function(ret, err) {
+                    if (ret == "ok") {
+                        // openWin('bind_alipay', true)
+
+                        document.getElementById("setpin").style.display = "none";
+
+                        save(false);
+                    } else {
+                        toast.fail({
+                            title: ret,
+                        });
+                    }
+                })
+            }
+        }
+    }
+
+    new PinLogin({
+        el: document.getElementById("mainPinLogin"),
+        loginEndpoint: "login.php",
+        redirectTo: "dashboard.html"
+    });
+</script>
+
+</html>

@@ -1,0 +1,439 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+</head>
+
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        top: 12px;
+    }
+    
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    
+    input:checked+.slider {
+        background-color: #5df321;
+    }
+    
+    input:focus+.slider {
+        box-shadow: 0 0 1px #5df321;
+    }
+    
+    input:checked+.slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+    
+    .slider.round {
+        border-radius: 34px;
+    }
+    
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+    #myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+        opacity: 0.3;
+    }
+</style>
+
+<body>
+    <video autoplay muted loop id="myVideo">
+        <source src="../image/chamei.mp4" type="video/mp4">
+    </video>
+    <section class="aui-content">
+        <ul id="userinfo" class="aui-list aui-list-in" style="background-color: transparent !important;">
+            <div class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="background-color: #E7E7E7; padding-top: 0.6rem !important;">基本资料（必填）</div>
+            <li class="aui-list-item aui-padded-t-5 aui-padded-b-5" @click="avatar()">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">头像</div>
+                    <img :src="it.avatar" style="width:3rem;">
+                </div>
+            </li>
+            <!-- @click="input('username', '请填写新昵称')" tapmode -->
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">昵称</div>
+                </div>
+                <input id="username" type="text" v-model="it.username">
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="APP.openMask('user_city');">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">常驻城市</div>
+                </div>
+                <input id="city" type="text" v-model="it.city" disabled>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="optionList('age', '请选择年龄')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">年龄</div>
+                </div>
+                <input id="age" type="text" v-model="it.age" disabled>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="optionList('zodiac', '请选择星座')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">星座</div>
+                </div>
+                <input id="zodiac" type="text" v-model="it.zodiac" disabled>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="optionList('job', '请选择职业')" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">职业</div>
+                </div>
+                <input id="job" type="text" v-model="it.job" disabled>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="optionList('program', '请选择节目')" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">交友节目</div>
+                </div>
+                <input id="program" type="text" v-model="it.program" disabled>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="optionList('wish', '请选择期望')" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">期望对象</div>
+                </div>
+                <input id="wish" type="text" v-model="it.wish" disabled>
+            </li>
+            <div class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="background-color: #E7E7E7; padding-top: 0.6rem !important;">更多信息（选填）</div>
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="optionList('height', '请填写')" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">身高</div>
+                </div>
+                <input id="height" type="text" v-model="it.height" disabled>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="optionList('weight', '请填写')" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">体重</div>
+                </div>
+                <input id="weight" type="text" v-model="it.weight" disabled>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">个人介绍</div>
+                </div>
+                <input id="intro" type="text" v-model="it.intro">
+            </li>
+
+            <!-- <li class="aui-list-item aui-padded-t-15 aui-padded-b-15" onClick="openWin('password')" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">修改密码</div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-t-15 aui-padded-b-15" onClick="onCache()" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title">清除缓存</div>
+                    <div class="aui-list-item-right" id="cache">0M</div>
+                </div>
+            </li> -->
+        </ul>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+            api.parseTapmode();
+            api.getCacheSize(function(ret) {
+                if (ret.size > 0) {
+                    $api.text($api.byId('cache'), parseInt(ret.size / 1024 / 1024) + 'M');
+                }
+            });
+
+            api.addEventListener({
+                name: 'fillusercity'
+            }, function(ret) {
+                userinfo.it.city = $api.getStorage('usercity');
+                $api.rmStorage('usercity');
+            });
+
+            userinfo = new Vue({
+                el: '#userinfo',
+                data: {
+                    setavatar: false,
+                    it: {}
+                },
+                mounted: function() {
+                    $api.get('my', function(json) {
+                        userinfo.it = json
+                    });
+                },
+                methods: {
+                    //选择头像
+                    avatar: function(vid) {
+                        var resultList = api.hasPermission({ list:['photos'] });
+                        var canproceed = false;
+
+                        if (resultList[0].granted) {
+                            getPicture(2);
+                        } else {
+                            api.requestPermission({
+                                list:['photos'],
+                                code:1
+                            }, function(appret, apperr){
+                                if (appret.list[0].granted){
+                                    getPicture(2);
+                                }
+                            });
+                        }
+                    },
+                    optionList: function(key, title) {
+                        // if (key == 'city') {
+                        //     content = ['安徽', '北京', '重庆', '福建', '甘肃', '广东', '广西', '贵州', '海南', '河北', '黑龙江', '河南', '湖北', '湖南', '江苏', '江西', '吉林', '长春', '辽宁', '内蒙古', '宁夏', '青海', '山东', '上海', '陕西', '四川', '天津', '西藏', '云南', '浙江', '香港', '澳门', '台湾']
+                        // }
+
+                        if (key == 'age') {
+                            content = ['18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99', '100']
+                        }
+
+                        if (key == 'zodiac') {
+                            content = ['水瓶座', '双鱼座', '白羊座', '金牛座', '双子座', '巨蟹座', '狮子座', '处女座', '天秤座', '天蝎座', '射手座', '摩羯座']
+                        }
+
+                        if (key == 'job') {
+                            content = ['在校学生', '互联网', '通信技术', '销售', '市场拓展', '公关/商务', '行政/后勤', '高级管理', '财会/审计/统计', '投资/保险', '房地产/装修/物业', '普通服务行业', '航空服务业', '教育/培训', '咨询/顾问', '学术/研究', '设计/创意', '文学/影视', '餐饮/旅游', '医疗/护理', '保健/美容', '翻译', '公务员', '自由职业者', '其他']
+                        }
+
+                        if (key == 'program') {
+                            content = ['茶女开课', '茶庄资源', '茶友杂谈', '茶馆活动']
+                        }
+
+                        if (key == 'wish') {
+                            content = ['国内旅游', '同城导演', '陪玩游戏', '陪吃饭看电影', '同城约K', '同城约会', '需小姐姐一枚', '租个女友回家过年', '照骗勿扰', '私聊定时间', '长膝相伴', '商务应酬', '喝茶聊天']
+                        }
+
+                        if (key == 'height') {
+                            content = ['140', '141', '142', '143', '144', '145', '146', '147', '148', '149', '150', '151', '152', '153', '154', '155', '156', '157', '158', '159', '160', '161', '162', '163', '164', '165', '166', '167', '168', '169', '170', '171', '172', '173', '174', '175', '176', '177', '178', '179', '180', '181', '182', '183', '184', '185', '186', '187', '188', '189', '190', '191', '192', '193', '194', '195', '196', '197', '198', '199', '200', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210', '211', '212', '213', '214', '215', '216', '217', '218', '219']
+                        }
+
+                        if (key == 'weight') {
+                            content = ['40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '89', '90', '91', '92', '93', '94', '95', '96', '97', '98', '99']
+                        }
+
+                        api.actionSheet({
+                            title: title,
+                            buttons: content,
+                            cancelTitle: '取消',
+                        }, function(ret, err) {
+                            // if (key == 'city') {
+                            //     userinfo.it.city = content[ret.buttonIndex - 1];
+                            // } 
+                            if (key == 'age') {
+                                userinfo.it.age = content[ret.buttonIndex - 1];
+                            } else if (key == 'zodiac') {
+                                userinfo.it.zodiac = content[ret.buttonIndex - 1];
+                            } else if (key == 'job') {
+                                userinfo.it.job = content[ret.buttonIndex - 1];
+                            } else if (key == 'program') {
+                                userinfo.it.program = content[ret.buttonIndex - 1];
+                            } else if (key == 'wish') {
+                                userinfo.it.wish = content[ret.buttonIndex - 1];
+                            } else if (key == 'height') {
+                                userinfo.it.height = content[ret.buttonIndex - 1];
+                            } else if (key == 'weight') {
+                                userinfo.it.weight = content[ret.buttonIndex - 1];
+                            }
+                        });
+                    },
+                    input: function(key, title) {
+                        api.prompt({
+                            title: title,
+                            buttons: ['确定', '取消']
+                        }, function(ret, err) {
+                            if (ret.buttonIndex === 1 && ret.text !== '') {
+                                userinfo.it.username = ret.text;
+                            }
+                        });
+                    }
+                }
+            });
+        }
+        //保存修改
+    function save(redirectToMain) {
+        var toast = new auiToast();
+
+        if (userinfo.it.avatar === '') {
+            toast.fail({ title: '请上传头像' });
+            return false;
+        }
+        if (userinfo.it.username === '') {
+            toast.fail({ title: '请填写昵称' });
+            return false;
+        }
+        if (userinfo.it.city === '') {
+            toast.fail({ title: '请填写常驻城市' });
+            return false;
+        }
+        if (userinfo.it.age === '') {
+            toast.fail({ title: '请填写年龄' });
+            return false;
+        }
+        if (userinfo.it.zodiac === '') {
+            toast.fail({ title: '请填写星座' });
+            return false;
+        }
+        if (userinfo.it.job === '') {
+            toast.fail({ title: '请填写职业' });
+            return false;
+        }
+        if (userinfo.it.program === '') {
+            toast.fail({ title: '请填写交友节目' });
+            return false;
+        }
+        if (userinfo.it.wish === '') {
+            toast.fail({ title: '请填写期望对象' });
+            return false;
+        }
+        if (userinfo.it.height === '') {
+            toast.fail({ title: '请填写身高' });
+            return false;
+        }
+        if (userinfo.it.weight === '') {
+            toast.fail({ title: '请填写体重' });
+            return false;
+        }
+        if (userinfo.it.intro === '') {
+            toast.fail({ title: '请填写个人介绍' });
+            return false;
+        }
+
+        api.ajax({
+            url: app_url + 'my/userinfo',
+            method: 'post',
+            headers: {
+                token: $api.getStorage('token')
+            },
+            certificate: {
+                path: 'widget://image/client.p12',
+                password: 'dXF5r6fkwIwojeV3'
+            },
+            data: {
+                values: {
+                    username: userinfo.it.username,
+                    city: userinfo.it.city,
+                    age: userinfo.it.age,
+                    zodiac: userinfo.it.zodiac,
+                    job: userinfo.it.job,
+                    program: userinfo.it.program,
+                    wish: userinfo.it.wish,
+                    wechat_acc: '',
+                    qq_acc: '',
+                    show_option: '',
+                    height: userinfo.it.height,
+                    weight: userinfo.it.weight,
+                    intro: userinfo.it.intro
+                },
+                files: {
+                    avatar: userinfo.it.avatar
+                }
+            }
+        }, function(ret, err) {
+            if (ret) {
+                var toast = new auiToast();
+               
+                toast.success({
+                    title: '保存成功'
+                });
+                api.sendEvent({
+                    name: 'logout'
+                });
+                
+                if (redirectToMain == true) {
+                    api.sendEvent({name: 'reloadmain'});
+                    setTimeout(function() { 
+                        api.closeToWin({ name: 'main' }); }, 
+                    1000);
+                } else {
+                    setTimeout(function() { api.closeWin(); }, 1000);
+                }
+            }
+        });
+    }
+    //选择本地头像
+    function setAvatar(img) {
+        userinfo.it.setavatar = true;
+        userinfo.it.avatar = img;
+    }
+    //打开拍照或相册
+    function getPicture(index) {
+        if (index === 1) {
+            var sourceType = 'camera';
+        } else
+        if (index === 2) {
+            var sourceType = 'album';
+        }
+        if (sourceType) {
+            api.getPicture({
+                sourceType: sourceType,
+                direction: 'front',
+            }, function(ret, err) {
+                if (ret && ret.data) {
+                    userinfo.it.avatar = ret.data;
+                }
+            });
+        }
+    }
+    //清除缓存
+    function onCache() {
+        api.clearCache(function() {
+            $api.text($api.byId('cache'), '0M');
+            api.toast({
+                msg: '清除完成'
+            });
+        });
+    }
+</script>
+
+</html>

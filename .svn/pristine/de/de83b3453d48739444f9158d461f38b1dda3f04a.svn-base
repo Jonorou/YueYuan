@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的邀请</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+</head>
+
+<style>
+    .divBox {
+        background-color: #1B1A1F !important;
+        border: 1px solid #D8A255 !important;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-radius: 10px;
+        left: 10px;
+        right: 10px;
+    }
+    
+    #divInvite {
+        margin-top: 40px;
+        margin-bottom: 40px;
+        background-color: #D8A255 !important;
+    }
+    
+    #divCum {
+        margin-top: 40px;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    
+    p {
+        color: #D8A255 !important;
+    }
+</style>
+
+<body style="background-color: #2A292E !important;">
+    <section class="aui-content" id="invite">
+        <div id="divNote" style="color: #D8A255;">
+            <table class="aui-list aui-list-in aui-font-size-12" style="background-color: #2A292E; padding-top:15px; margin: auto; text-align: center; width:100%;">
+                <tr>
+                    <td class="aui-font-size-14">
+                        0
+                    </td>
+
+                    <td class="aui-font-size-16">
+                        0
+                    </td>
+
+                    <td class="aui-font-size-14">
+                        0
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        累计邀请(人)
+                    </td>
+
+                    <td>
+                        可以领取会员(天)
+                    </td>
+
+                    <td>
+                        累计获取会员(天)
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="divInvite" class="divBox">
+            <span>专属邀请码</span>
+            <span id="my_invite_code" style="padding-left:20px; font-size: 30px !important; font-weight: bold;" v-text="it.inviteCode"></span>
+            <span @click="copy(it.inviteCode)" style="margin-left:100px; border: 1px solid #000; border-radius: 10px; padding-left: 20px; padding-right: 20px; text-align: center;">点击复制</span>
+        </div>
+
+        <div id="divRule" class="divBox">
+            <p style="text-align: center; padding-bottom: 10px;">奖励规则</p>
+
+            <p style="padding-bottom: 10px;">
+                奖励一：转发三个QQ群或微信群，奖励10元金币，找客服领取;
+            </p>
+
+            <p style="padding-bottom: 10px;">
+                奖励二：通过邀请码注册一人，奖励一天会员，奖励无上限;
+            </p>
+
+            <p style="padding-bottom: 10px;">
+                奖励三：三级邀请收益奖励：下线购买会员，1级可以获得30%收益，2级可以获得20%收益，三级可以获得10%收益;
+            </p>
+        </div>
+
+        <div id="divCum" class="divBox">
+            <p>累计收益(币)</p>
+            <p>0.00</p>
+        </div>
+
+        <div id="divList" class="divBox" style="color: #D8A255;">
+            <table class="aui-font-size-12" style="background-color: #1B1A1F; padding-top:15px; margin: auto; text-align: center; width:100%;">
+                <tr>
+                    <td>标识</td>
+                    <td>邀请用户(1级)</td>
+                    <td>收益(币)</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</body>
+<script type="text/javascript " src="../script/api.js "></script>
+<script type="text/javascript " src="../script/app.js "></script>
+<script type="text/javascript " src="../script/vue.js "></script>
+<script type="text/javascript " src="../script/toast.js "></script>
+<script type="text/javascript " src="../script/common.js "></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript ">
+    apiready = function() {
+        api.parseTapmode();
+        api.getCacheSize(function(ret) {
+            if (ret.size > 0) {
+                $api.text($api.byId('cache'), parseInt(ret.size / 1024 / 1024) + 'M');
+            }
+        });
+
+        var invite = new Vue({
+            el: '#invite',
+            data: {
+                it: {
+                    'inviteCode': ''
+                },
+            },
+            created: function() {},
+            mounted: function() {
+                $api.get('my/', function(data) {
+                    invite.it.inviteCode = data.invite_code;
+                });
+            },
+            methods: {
+			//复制
+			copy: function(copytext){
+				var clipBoard = api.require('clipBoard');
+				clipBoard.set({
+					value: copytext
+				}, function(ret, err) {
+					if (ret && ret.status) {
+                        alert('复制成功');
+					}
+				});
+			},
+        },
+        });
+    }
+
+    //清除缓存
+    function onCache() {
+        api.clearCache(function() {
+            $api.text($api.byId('cache'), '0M');
+            api.toast({
+                msg: '清除完成'
+            });
+        });
+    }
+
+    function copyText() {
+        var copyText = document.getElementById("my_invite_code");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        alert("Copied the text: " + copyText.value);
+    }
+</script>
+
+</html>

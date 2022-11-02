@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        .aui-col-xs-4 {
+            padding: 0.5rem
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content" id="buy">
+        <div style="color: #A86ACE; padding: 0.2rem 0.4rem; text-align: justify;">
+            每当有人付费查看你的相册或向你发红包或邀请奖励或者下单金额，所有收益会进入到钱包；每当你举报女生用户成功，系统会把你的费用退回；每当您下单女士存在欺骗行为投诉成功，平台会冻结女生账户且没收女生保证金作为处罚，且给予你10倍赔付作为补偿；你可以随时提现（处理时间2个工作日以内）
+        </div>
+        <div class="aui-margin-b-5 aui-font-size-16" style="display:inline-block; width:100% !important; text-align:center; margin-top: 30px; font-weight: bold;">
+            <span>账户余额</span>
+            <div><span v-text="money"></span>币</div>
+        </div>
+        <div class="aui-font-size-16" style="margin-top: 20px; font-weight: bold; width: 100% !important;">
+            <div style="display:inline-block; width:45% !important; text-align:center;">
+                <span>已冻结</span>
+                <div><span v-text="money_lock"></span>币</div>
+            </div>
+            <div style="display:inline-block; width:45% !important; text-align:center;">
+                <span>安全账户</span>
+                <div><span v-text="money_safe"></span>币</div>
+            </div>
+        </div>
+
+        <ul id="menulist" class="aui-list" style="margin-top: 50px;">
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWin('recharge_log', true)">
+                    <div class="" tapmode>
+                        <div class="aui-grid-label aui-font-size-14">充值记录</div>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                <div class="aui-list-item-inner aui-list-item-arrow" onclick="openWin('withdraw_log', true)">
+                    <div class="" tapmode>
+                        <div class="aui-grid-label aui-font-size-14">提现记录</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="aui-bar aui-bar-tab">
+            <div style="background-color: #EFEBFF;" class="aui-bar-tab-item" onclick="openWin('recharge', true)" tapmode>
+                <div style="color: #A86ACE;" class="aui-font-size-16">充值</div>
+            </div>
+
+            <div v-if="status_abnormal == 0 && oldpaypassword == ''" style="background-color: #A86ACE;" class="aui-bar-tab-item" tapmode>
+                <div style="color: #fff;" class="aui-font-size-16" onclick="openWin('set_pin', true)">提现</div>
+            </div>
+
+            <div v-if="status_abnormal == 0 && oldpaypassword != ''" style="background-color: #A86ACE;" class="aui-bar-tab-item" tapmode>
+                <div style="color: #fff;" class="aui-font-size-16" onclick="openWin('bind_alipay', true)">提现</div>
+            </div>
+
+            <div v-if="status_abnormal == 1" style="background-color: #A86ACE;" class="aui-bar-tab-item" tapmode>
+                <div style="color: #fff;" class="aui-font-size-16" onclick="prompt_msg('账号异常，无法提现')">提现</div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        var buy = new Vue({
+            el: '#buy',
+            data: {
+                it: [],
+                ok: 0,
+                money: 0, //账户余额
+                money_lock: 0, //冻结金额
+                money_safe: 0, //安全金额
+                thismoney: 0, //充值金额
+                status_abnormal: '', //账户异常
+                payapi: {},
+                interval: null,
+                oldpaypassword: ''
+            },
+            watch: {
+                thismoney(num) {
+                    if (num < 1) {
+                        this.thismoney = '';
+                        return true;
+                    }
+                    if (num > 0 && num.indexOf('.') > -1 && num.split('.')[1].length > 2) {
+                        this.thismoney = parseFloat(num).toFixed(2);
+                    }
+                }
+            },
+            mounted: function() {
+                $api.get('my/money', function(data) {
+                    buy.money = data.money2;
+                    buy.money_lock = data.money_lock;
+                    buy.money_safe = data.money_safe;
+                    buy.status_abnormal = data.status_abnormal;
+                    buy.oldpaypassword = data.pay_password;
+                });
+                $api.get('my/moneytips', function(moneytips) {
+                    if (moneytips) {
+                        $api.html($api.byId('moneytips'), moneytips.replace(/\n/g, '<br>'));
+                    }
+                });
+                $api.get('app/payapi', function(data) {
+                    buy.payapi = data;
+                });
+                $api.get('app/buymoney', function(data) {
+                    if (data) {
+                        buy.it = data.split(',');
+                        buy.thismoney = buy.it[0];
+                    }
+                });
+                this.interval = setInterval(this.refreshData, 3000);
+            },
+            beforeDestroy() {
+                clearInterval(this.interval)
+            },
+            methods: {
+                getMoney: function(k) {
+                    buy.ok = k;
+                    buy.thismoney = buy.it[k];
+                },
+                payfor: function(type) {
+                    if (buy.thismoney > 0) {
+                        payapp(type, {
+                            active: 'recharge',
+                            num: buy.thismoney,
+                            describe: '钱包' //余额充值
+                        });
+                    }
+                },
+                mqq: function() {
+                    location.href = encodeURI('mqq://im/chat?chat_type=wpa&uin=' + this.payapi.qq + '&version=1&src_type=web');
+                },
+                refreshData: function() {
+                    $api.get('my/money', function(data) {
+                        buy.money = data.money2;
+                        buy.money_lock = data.money_lock;
+                        buy.money_safe = data.money_safe;
+                        buy.status_abnormal = data.status_abnormal;
+                    });
+                }
+            }
+        });
+        api.addEventListener({
+            name: 'reload'
+        }, function(ret, err) {
+            if (ret) {
+                buy.ok = 0;
+                buy.money = (parseFloat(buy.money) + parseFloat(ret.value.money)).toFixed(2);
+                buy.thismoney = buy.it[0];
+            }
+            window.location.reload();
+        });
+    };
+    //发起支付请求
+    function payapp(type, pageParam) {
+        var toast = new auiToast();
+        toast.loading({
+            title: '正在创建支付信息...'
+        });
+        pageParam.tradeType = type;
+        $api.post('my/pay', pageParam, function(data) {
+            toast.hide();
+            if (type === 'wechat_app') {
+                var wxPay = api.require('wxPay');
+                wxPay.payOrder({
+                    apiKey: data.wxPayWay.appid,
+                    orderId: data.wxPayWay.prepayid,
+                    mchId: data.wxPayWay.partnerid,
+                    nonceStr: data.wxPayWay.noncestr,
+                    timeStamp: data.wxPayWay.timestamp,
+                    package: data.wxPayWay.package,
+                    sign: data.wxPayWay.sign,
+                });
+                // api.openFrame({
+                //     name: 'payapi',
+                //     url: data.wxPayWay,
+                //     rect: { x: 0, y: 0, w: 0, h: 0 },
+                // });
+            } else
+            if (type === 'alipay_wap') {
+                APP.alipay(data.payinfo, function() {
+                    //  window.location.reload();
+                    api.sendEvent({
+                        name: 'reload',
+                        extra: {
+                            money: pageParam.num
+                        }
+                    });
+                });
+            }
+            return true;
+            api.addEventListener({
+                name: 'resume'
+            }, function(ret, err) {
+                setTimeout(function() {
+                    toast.hide();
+                    $api.get('my/pay_check/' + data.sn, function() {
+                        api.closeFrame({
+                            name: 'payapi'
+                        });
+                        api.removeEventListener({
+                            name: 'resume'
+                        });
+                        toast.success({
+                            title: '支付成功'
+                        });
+                        setTimeout(function() {
+                            api.sendEvent({
+                                name: 'reload',
+                                extra: {
+                                    money: pageParam.num
+                                }
+                            });
+                        }, 2000);
+                    }, function() {
+                        toast.fail({
+                            title: '支付失败'
+                        });
+                    });
+                }, 3000);
+            });
+        }, function(data) {
+            toast.hide();
+            toast.fail({
+                title: data.msg
+            });
+        });
+    }
+
+    function prompt_msg(err_msg) {
+        var toast = new auiToast();
+
+        toast.fail({
+            title: err_msg
+        });
+    }
+</script>
+
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>投诉客服</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        .aui-radio {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+        
+        .aui-btn.aui-btn-outlined {
+            border-radius: 50px
+        }
+        
+        .aui-list .aui-list-item-right {
+            position: absolute;
+            right: 0;
+            top: 0.25rem;
+        }
+        
+        .image-list {
+            width: 100%;
+            background-size: cover;
+            padding: 10px 10px;
+            overflow: hidden;
+        }
+        
+        .image-item {
+            width: 30%;
+            height: 25vw;
+            background-image: url(../image/add.png);
+            background-size: 100% 100%;
+            display: inline-block;
+            position: relative;
+            border-radius: 5px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            border: solid 1px #e8e8e8;
+        }
+        
+        .image-item .image-close {
+            position: absolute;
+            display: inline-block;
+            right: -6px;
+            top: -6px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            border-radius: 12px;
+            background-color: #ff464e;
+            color: #fff;
+            border: solid 1px #f26c85;
+            font-size: 0.6rem;
+            font-weight: 200;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content" id="withdraw">
+        <div class="aui-content user-info">
+            <div class="aui-row" style="text-align: justify; background-color: #fff; padding: 0.3rem 0.5rem;">
+                客服职责是为用户服务和维护平台秩序，如果你碰到了不负责任甚至以权谋私的情况，欢迎在此提交投诉！只要情况属实，我们一定秉公办理；所举报情节严重者将酌情给予金币奖励。
+            </div>
+        </div>
+
+        <br>
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary">沟通时间</div>
+                    <div class="aui-list-item-input">
+                        <input type="datetime-local" name="chattime" id="chattime" placeholder="请选择你与被投诉客服最近的沟通时间">
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="aui-list aui-form-list">
+            <li class="aui-list-header">请选择投诉原因</li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary" style="min-width: 4rem;">沟通态度不好</div>
+                    <div class="aui-list-item-input" style="width: 1.5rem;">
+                        <input type="radio" class="aui-radio" id="reason1" name="reason" value="沟通态度不好">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary" style="min-width: 4rem;">私下加联系方式</div>
+                    <div class="aui-list-item-input" style="width: 1.5rem;">
+                        <input type="radio" class="aui-radio" id="reason2" name="reason" value="私下加联系方式">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary" style="min-width: 4rem;">威胁隐私安全</div>
+                    <div class="aui-list-item-input" style="width: 1.5rem;">
+                        <input type="radio" class="aui-radio" id="reason3" name="reason" value="威胁隐私安全">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary" style="min-width: 4rem;">暗示或索要贿赂</div>
+                    <div class="aui-list-item-input" style="width: 1.5rem;">
+                        <input type="radio" class="aui-radio" id="reason4" name="reason" value="暗示或索要贿赂">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label aui-text-primary" style="min-width: 4rem;">其他</div>
+                    <div class="aui-list-item-input" style="width: 1.5rem;">
+                        <input type="radio" class="aui-radio" id="reason5" name="reason" value="其他">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-header">相关截图</li>
+            <li class="aui-list-item">
+                <div class="image-list">
+                    <div v-for="(v,k) in images" class="image-item" :style="add(k)">
+                        <div class="image-close" @click="del(k)" tapmode>X</div>
+                    </div>
+                    <div class="image-item" v-if="images.length < 9" @click="select()" tapmode></div>
+                </div>
+            </li>
+            <li class="aui-list-header">补充描述</li>
+            <li class="aui-list-item aui-padded-10">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-input">
+                        <textarea name="description" id="description" placeholder="选填"></textarea>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div style="margin:auto; text-align: center;">
+            <div style="width: 97%; color: #fff !important; background-color: purple !important;" class="aui-btn aui-btn-order" @click="save()">提交</div>
+        </div>
+        <br>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/input.js"></script>
+<script type="text/javascript" src="../script/lib/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var toast = new auiToast();
+        var selectedIndex = "";
+        var withdraw = new Vue({
+            el: '#withdraw',
+            data: {
+                chattime: '',
+                description: '',
+                images: []
+            },
+            mounted: function() {
+
+            },
+            methods: {
+                //选择图片
+                select: function() {
+                    api.getPicture({
+                        sourceType: 'library',
+                        encodingType: 'jpg',
+                    }, function(ret, err) {
+                        if (ret && ret.data && withdraw.images.length < 9) {
+                            withdraw.images = withdraw.images.concat(ret.data);
+                        }
+                    });
+                },
+                //添加图片
+                add: function(k) {
+                    return 'background-image:url(' + withdraw.images[k] + ')';
+                },
+                //删除图片
+                del: function(k) {
+                    withdraw.images.splice(k, 1);
+                },
+                save: function() {
+                    var selectedreason = $("input[type='radio'][name='reason']:checked").val();
+
+                    if (chattime.value === '') {
+                        toast.fail({
+                            title: '请选择你与被投诉客服最近的沟通时间'
+                        });
+                        return false;
+                    }
+
+                    if (selectedreason === '' || selectedreason == undefined) {
+                        toast.fail({
+                            title: '请选择投诉原因'
+                        });
+                        return false;
+                    }
+
+                    if (description.value === '') {
+                        toast.fail({
+                            title: '请填写补充描述'
+                        });
+                        return false;
+                    }
+
+                    var json = {};
+                    for (var i in withdraw.images) {
+                        json['image' + i] = withdraw.images[i];
+                    }
+
+                    api.ajax({
+                        url: app_url + 'my/complaint_kefu',
+                        method: 'post',
+                        headers: {
+                            token: $api.getStorage('token')
+                        },
+                        certificate: {
+                            path: 'widget://image/client.p12',
+                            password: 'dXF5r6fkwIwojeV3'
+                        },
+                        data: {
+                            values: {
+                                reason: selectedreason,
+                                chattime: chattime.value,
+                                description: description.value
+                            },
+                            files: json,
+                        },
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.code === 0) {
+                                APP.toast('success', '提交成功', function() {
+                                    api.closeWin();
+                                });
+                            } else {
+                                api.alert({
+                                    msg: ret.msg
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>
+
+</html>

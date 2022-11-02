@@ -1,0 +1,126 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>部落</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+      <link rel="stylesheet" type="text/css" href="../css/swiper.css"/>
+    <style type="text/css">
+        .aui-list .wechat-avatar {
+            width:3rem;
+        }
+        .wechat-avatar,
+        .wechat-avatar > img {
+            border-radius:0.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="aui-content aui-margin-b-15" id="app" v-cloak>
+        <div id="swiper" class="swiper-container">
+          <div class="swiper-wrapper">
+              <div v-for="v in swiper" class="swiper-slide" @click="APP.aLink(v.linkurl, v.title)" tapmpde>
+                  <img :data-src="APP.getImgUrl(v.picurl)" class="swiper-lazy" />
+              </div>
+          </div>
+        </div>
+        <ul class="aui-list aui-list-noborder aui-media-list">
+            <li class="aui-list-item aui-list-item-middle" v-for="v in it" :key="v.id">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media wechat-avatar">
+                        <img src="../image/lazloding.png" :data-echo="APP.getImgUrl(v.picurl)" onerror="this.src='../image/user_header.jpg'"/>
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title" v-text="v.title"></div>
+                            <div class="aui-list-item-right" style="max-width:60%">
+                                <template v-if="v.isbuy && v.endtime > 0">
+                                    <div class="aui-btn aui-btn-info"  tapmode @click="APP.openWin('buluo_tips', {id:v.id}, true)">进入</div>
+                                </template>
+                                <template v-else>
+                                    <!-- <div class="aui-btn aui-btn-outlined" v-if="v.trysee > 0" tapmode @click="APP.openWin('buluo_tips', {id:v.id}, true)">试用</div> -->
+									<div class="aui-btn aui-margin-r-10" :class="{'aui-btn-outlined':!v.vid}" :id="'vid'+v.id" tapmode @click="favor(v.id)" v-if="!v.vid && !param.sn" v-text="v.vid ? '已收藏' : '收藏'"></div>
+                                    <!-- <div class="aui-btn aui-btn-info aui-margin-l-5" v-text="'￥'+parseFloat(v.isvip ? v.pricevip : v.price)" tapmode @click="APP.openWin('buluo_tips', {id:v.id}, true)"></div> -->
+									<div class="aui-btn aui-btn-outlined" tapmode @click="APP.openWin('buluo_tips', {id:v.id}, true)">进入</div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="aui-info aui-padded-t-0">
+                    <p class="aui-info-item aui-ellipsis-2" v-text="v.desc"></p>
+                </div>
+            </li>
+        </ul>
+        <p class="aui-gird-lable aui-margin-t-10 aui-text-center" v-if="it.length > 0" v-text="loader"></p>
+    </div>
+</body>
+<script type="text/javascript" src="../script/lib/api.js" ></script>
+<script type="text/javascript" src="../script/lib/app.js" ></script>
+<script type="text/javascript" src="../script/lib/vue.js" ></script>
+<script type="text/javascript" src="../script/lib/echo.js"></script>
+<script type="text/javascript" src="../script/swiper.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    var vm = new Vue({
+    		el: '#app',
+    		data: {
+            it: [],
+            swiper: [],
+            loader: '正在加载更多...',
+            param: {
+                sn: api.pageParam.title,
+                page: 1,
+            },
+        },
+    	created: function(){
+            this.list();
+            APP.pullRefresh();
+            APP.loadMore(function(){
+                vm.list();
+            });
+        },
+    	mounted: function(){
+            $api.get('app/adv/id,picurl,linkurl/5?type=2', function(data){
+                vm.swiper = data;
+            });
+            this.$nextTick(function(){
+                api.parseTapmode();
+            });
+        },
+        updated: function(){
+            echo.init({offset: 500, throttle: 0});
+            //轮播图组件
+              new Swiper('#swiper', {
+                  loop: true,
+                  lazy: {loadPrevNext: true},
+              });
+        },
+    	methods: {
+            list: function(){
+                $api.get('my/appslist', this.param, function(data){
+                    vm.it = vm.it.concat(data);
+                    vm.param.page++;
+                    if(data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                });
+            },
+			favor: function(id){
+				$api.post('my/favor/'+id, function(data){
+					var el = $api.byId('vid'+id);
+					if(data) {
+						$api.removeCls(el, 'aui-btn-outlined');
+						$api.text(el, '已收藏');
+					}else{
+						$api.addCls(el, 'aui-btn-outlined');
+						$api.text(el, '收藏');
+					}
+				});
+			},
+        },
+    });
+};
+</script>
+</html>

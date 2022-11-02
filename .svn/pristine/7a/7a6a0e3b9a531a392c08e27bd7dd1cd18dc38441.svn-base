@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>新消息通知</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">                
+        .aui-list .aui-list-item {
+            min-height: 1.8rem;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 26px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(18px);
+            -ms-transform: translateX(18px);
+            transform: translateX(18px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="app" v-cloak>
+        <div class="aui-content">
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-header">APP未打开时</li>
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label aui-font-size-14" style="min-width: 4rem;">接收新消息通知</div>
+                        <div class="aui-list-item-input" style="width: 2.8rem; padding: 0.6rem 0.8rem;">
+                            <label class="switch">
+                                <input type="checkbox" id="notification" @click="save('notification');">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <br>
+            <ul class="aui-list aui-list-noborder">
+                <li class="aui-list-header">APP打开时</li>
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label aui-font-size-14" style="min-width: 4rem;">声音</div>
+                        <div class="aui-list-item-input" style="width: 2.8rem; padding: 0.6rem 0.8rem;">
+                            <label class="switch">
+                                <input type="checkbox" id="sound" @click="save('sound');">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+               
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" style="border-bottom: 1px solid lightgray;" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-grid-label aui-font-size-14" style="min-width: 4rem;">震动</div>
+                        <div class="aui-list-item-input" style="width: 2.8rem; padding: 0.6rem 0.8rem;">
+                            <label class="switch">
+                                <input type="checkbox" id="vibration" @click="save('vibration');">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        var toast = new auiToast();
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                it: {}
+            },
+            mounted: function() {
+                
+                $api.get('my', function(json) {
+                    vm.it = json;
+                    document.getElementById("notification").checked = json.notification == 1 ? true : false;
+                    document.getElementById("sound").checked = json.sound == 1 ? true : false;
+                    document.getElementById("vibration").checked = json.vibration == 1 ? true : false;
+                });
+            },
+            methods: {
+                save: function(buttontype) {
+
+                    if (buttontype == 'notification') {
+                        var passvalue = document.getElementById("notification").checked;
+
+                        $api.post('my/update_setting', {
+                            setting: 'notification',
+                            value: passvalue ? 1 : 0
+                        }, function(){
+                            toast.success({title: '设置成功'});
+                        }, function(data){
+                            toast.fail({title: data.msg});
+                        });
+                        
+                    } else if (buttontype == 'sound') {
+                        var passvalue = document.getElementById("sound").checked;
+
+                        $api.post('my/update_setting', {
+                            setting: 'sound',
+                            value: passvalue ? 1 : 0
+                        }, function(){
+                            toast.success({title: '设置成功'});
+                        }, function(data){
+                            toast.fail({title: data.msg});
+                        });
+                    } else if (buttontype == 'vibration') {
+                        var passvalue = document.getElementById("vibration").checked;
+
+                        $api.post('my/update_setting', {
+                            setting: 'vibration',
+                            value: passvalue ? 1 : 0
+                        }, function(){
+                            toast.success({title: '设置成功'});
+                        }, function(data){
+                            toast.fail({title: data.msg});
+                        });
+                    }               
+                }
+            }
+        });
+    }
+</script>
+
+</html>

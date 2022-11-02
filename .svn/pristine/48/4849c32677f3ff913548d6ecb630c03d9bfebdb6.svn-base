@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/aui.css"/>
+    <style>
+      .aui-bar-nav .aui-pull-left{padding-right: 1.25rem}
+      .aui-btn .aui-badge{margin-left:-0.25rem}
+    </style>
+</head>
+<body>
+  <header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+    <a class="aui-pull-left aui-btn">
+        <span class="aui-iconfont"></span>
+    </a>
+    <div class="aui-title"><label>消息</label></div>
+  </header>
+  <section id="tab" class="aui-tab">
+      <div class="aui-tab-item aui-active">系统</div>
+      <div class="aui-tab-item">私聊</div>
+  </section>
+  <footer id="footer" class="aui-bar aui-bar-tab">
+      <div class="aui-bar-tab-item" tapmode onclick="APP.openBar('main', false)">
+          <i class="aui-iconfont aui-icon-communityfill"></i>
+          <div class="aui-bar-tab-label">首页</div>
+      </div>
+      <div class="aui-bar-tab-item" tapmode onclick="APP.openBar('toutiao', false)">
+          <i class="aui-iconfont aui-icon-discoverfill"></i>
+          <div class="aui-bar-tab-label">动态</div>
+      </div>
+      <div class="aui-bar-tab-item aui-active" tapmode onclick="APP.openBar('message_bottom', false)">
+        <i class="aui-iconfont aui-icon-tagfill"></i>
+        <div class="aui-bar-tab-label">消息</div>
+      </div>
+      <div class="aui-bar-tab-item" tapmode onclick="APP.openBar('my', true)">
+          <i class="aui-iconfont aui-icon-peoplefill"></i>
+          <div class="aui-bar-tab-label">我的</div>
+      </div>
+  </footer>
+</body>
+<script type="text/javascript" src="script/lib/api.js"></script>
+<script type="text/javascript" src="script/lib/app.js"></script>
+<script type="text/javascript" src="script/lib/tab.js"></script>
+<script type="text/javascript">
+var auiTab;
+apiready = function() {
+    api.parseTapmode();
+    api.addEventListener({
+        name: 'keyback'
+    });
+    APP.openFrameGroup(2, {
+        rect: {header: ['header', 'tab'], footer: 'footer'},
+        index: 0,
+    }, function(ret){
+        auiTab.setActive(ret.index);
+    });
+    auiTab = new auiTab({
+        element: $api.byId('tab'),
+    },function(ret){
+        api.setFrameGroupIndex({
+            name: 'message_bottom',
+            index: ret.index
+        });
+    });
+}
+</script>
+</html>

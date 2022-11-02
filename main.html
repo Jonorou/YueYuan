@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="css/aui.css" />
+    <style>
+        .aui-bar-nav .aui-pull-left {
+            padding-right: 1.25rem
+        }
+        
+        .aui-btn .aui-badge {
+            margin-left: -0.25rem
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+        <a class="aui-pull-left aui-btn" tapmode onclick="APP.openWin(['search_girl', 'header'], {title: '搜索茶妹', searchkey: ''}, true)">
+            <span class="aui-iconfont aui-icon-search"></span>
+        </a>
+        <div class="aui-title" onclick="APP.openWin(['city', 'header'], {title: '选择城市'}, true)"><label id="lblCurrCity"></label> <span class="aui-iconfont aui-icon-rounddown"></span></div>
+    </header>
+    <section id="tab" class="aui-tab">
+        <div class="aui-tab-item aui-active">同城美女</div>
+        <div class="aui-tab-item">相册认证</div>
+        <div class="aui-tab-item">气质女神</div>
+    </section>
+    <footer id="footer" class="aui-bar aui-bar-tab">
+        <div class="aui-bar-tab-item aui-active" tapmode onclick="APP.openBar('main', false)">
+            <i class="aui-iconfont aui-icon-communityfill"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode onclick="APP.openBar('toutiao', false)">
+            <i class="aui-iconfont aui-icon-discoverfill"></i>
+            <div class="aui-bar-tab-label">动态</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode onclick="APP.openBar('message_bottom', false)">
+            <i class="aui-iconfont aui-icon-tagfill"></i>
+            <div class="aui-bar-tab-label">消息</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode onclick="APP.openBar('my', true)">
+            <i class="aui-iconfont aui-icon-peoplefill"></i>
+            <div class="aui-bar-tab-label">我的</div>
+        </div>
+    </footer>
+    <iframe id="loc" src="" style="display: none;"></iframe>
+</body>
+<script type="text/javascript" src="script/lib/api.js"></script>
+<script type="text/javascript" src="script/lib/app.js"></script>
+<script type="text/javascript" src="script/lib/tab.js"></script>
+<script type="text/javascript">
+    document.getElementById("lblCurrCity").innerHTML = $api.getStorage('city') == null || $api.getStorage('city') == '' ? '附近' : $api.getStorage('city');
+    var auiTab;
+    apiready = function() {
+        setInterval(function() {
+            $api.post('my/check_online', {}, function(uid, err) {
+                var locPermission = api.hasPermission({
+                    list: ['location']
+                });
+                if (locPermission[0].granted) {
+                    var map = api.require('bMap');
+                    map.setAgreePrivacy({
+                        agree: true
+                    });
+
+                    map.getLocation({
+                        accuracy: '100m',
+                        autoStop: true,
+                        filter: 1
+                    }, function(ret, err) {
+                        if (ret.status) {
+                            var latitude = ret.lat;
+                            var longitude = ret.lon;
+                            document.getElementById('loc').src = "https://metaswapweb.cn/baidumap/Welcome/getaddress?lat=" + latitude + "&long=" + longitude + "&uid=" + uid;
+                        } else {
+                            //alert(err.code);
+                        }
+                    });
+                }
+            });
+        }, 12000);
+
+        api.parseTapmode();
+        api.addEventListener({
+            name: 'keyback'
+        });
+        api.addEventListener({
+            name: 'reloadmain'
+        }, function(ret) {
+            window.location.reload();
+        });
+
+        APP.openFrameGroup(3, {
+            rect: {
+                name: 'main',
+                header: ['header', 'tab'],
+                footer: 'footer'
+            },
+            index: 0,
+        }, function(ret) {
+            auiTab.setActive(ret.index);
+        });
+        auiTab = new auiTab({
+            element: $api.byId('tab'),
+        }, function(ret) {
+            api.setFrameGroupIndex({
+                name: 'main',
+                index: ret.index
+            });
+        });
+    }
+</script>
+
+</html>

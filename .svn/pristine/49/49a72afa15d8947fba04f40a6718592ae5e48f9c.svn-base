@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+        .aui-text-light {
+            color: #999 !important;
+        }
+        
+        .aui-grid.orders .aui-col-5 {
+            padding-top: 0.3rem;
+        }
+        
+        .aui-user-info {
+            width: 150%;
+            position: relative;
+            left: -25%;
+            padding-left: 25%;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+            padding-bottom: 1rem;
+        }
+        
+        .aui-grid .aui-dot {
+            top: 0rem;
+        }
+        
+        .aui-label-icon {
+            display: block;
+            width: 1.8rem;
+            height: 1rem;
+            border-radius: 50%;
+            margin: 0 auto;
+            line-height: 1.8rem;
+            text-align: center;
+        }
+        
+        .aui-label-cont .aui-iconfont {
+            font-size: 1rem;
+        }
+        
+        .aui-label-icon .aui-iconfont {
+            color: #ffffff;
+            font-size: 0.8rem;
+        }
+        
+        .aui-font-size-26 {
+            font-size: 1.3rem !important;
+        }
+        
+        .aui-grid-label {
+            color: #666 !important;
+        }
+        
+        .aui-list.list-nav .aui-list-item {
+            min-height: 3rem
+        }
+        
+        .aui-grid svg.aui-iconfont {
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+        
+        .aui-label-outlined:after {
+            border-color: #fff
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 顶部 -->
+    <section id="my" v-cloak>
+        <div class="aui-content aui-bg-white aui-margin-b-10">
+            <div class="aui-list-item-media" style="width:6rem; margin: 1rem auto 0.5rem auto;">
+                <img :src="it.avatar || '../image/logo.png'" style="width:6rem;" class="aui-img-round">
+            </div>
+
+            <div style="display:flex; justify-content: center;">
+                <a tapmode onclick="APP.openWin('userinfo', {toMain: false}, true)">
+                    <span class="aui-label aui-label-outlined aui-margin-l-10">
+                        <div class="aui-list-item-media">
+                            <img src="../image/icon/icon_profile.png" style="width:2rem;">
+                            <p>个人资料</p>
+                        </div>
+                    </span>
+                </a>
+
+                <a tapmode onclick="APP.openWin('buy', true)">
+                    <span class="aui-label aui-label-outlined aui-margin-l-10">
+                        <div class="aui-list-item-media">
+                            <img src="../image/icon/icon_wallet.png" style="width:2rem;">
+                            <p>钱包</p>
+                        </div>
+                    </span>
+                </a>
+
+                <!-- <a tapmode @click="APP.openWin(['toutiao_like', 'header'], {title: '我喜欢的', likeid:it.uid, frame:'toutiao', reload: true}, false, {reload: true})">
+                    <span class="aui-label aui-label-outlined aui-margin-l-10">
+                        <div class="aui-list-item-media">
+                            <img src="../image/icon/icon_myfav.png" style="width:2rem;">
+                            <p>我喜欢的</p>
+                        </div>
+                    </span>
+                </a> -->
+            </div>
+
+            <ul id="menulist" class="aui-list" style="margin-top: 50px;">
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" onclick="showReportGirl()">
+                        <!-- APP.openWin('report', true) -->
+                        <div class="aui-grid-label aui-font-size-14">投诉小妹</div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" onclick="APP.openWin('realname', true)">
+                        <div class="aui-grid-label aui-font-size-14">认证中心</div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" onclick="APP.openWin('vip_user', true)">
+                        <div class="aui-grid-label aui-font-size-14">会员</div>
+                        <input style="float: right; width: 65%; font-size: 10pt;" id="viptime" type="text" v-text="" disabled>
+                    </div>
+                </li>
+
+                <li v-if="it.canorder==1" class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" onclick="APP.openWin('manual_order_girl', true)">
+                        <div class="aui-grid-label aui-font-size-14">下单</div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" onclick="APP.openWin('manage_order_girl', true)">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="aui-grid-label aui-font-size-14">订单管理</div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" onclick="APP.openWin('blacklist', true)">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">黑名单</div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" onclick="APP.openWin('setting', true)">
+                        <div tapmode>
+                            <div class="aui-grid-label aui-font-size-14">设置</div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner aui-list-item-arrow" onclick="APP.openWin('my_invite', true)">
+                        <div class="" onclick="" tapmode>
+                            <div class="aui-grid-label aui-font-size-14">我的邀请</div>
+                        </div>
+                    </div>
+                </li>
+
+                <li id="LiveChat" class="aui-list-item aui-padded-t-0 aui-padded-b-0" onclick="openKeFu()">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div tapmode>
+                            <div class="aui-grid-label aui-font-size-14">有问题请找客服</div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0" @click="APP.openWin(['complaint_kefu', 'header'], {title:'投诉客服'}, true)">
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div tapmode>
+                            <div class="aui-grid-label aui-font-size-14">投诉客服</div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item aui-padded-t-0 aui-padded-b-0">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-grid-label aui-font-size-14">版本号</div>
+                        <input style="float: right; width: 13%;" id="version" type="text" value="1.0.5" disabled>
+
+                    </div>
+
+                </li>
+            </ul>
+
+            <div id="divReportGirl" style="display:none; background-color: rgba(0,0,0,0.5) !important; height: 120vh; width: 100%; position: absolute; top:0px; left:0px; margin:auto;z-index: 99999;">
+                <div style="height: 25%;"></div>
+                <div style="align-items: center; border:1px solid #fff; border-radius: 10px; height: auto; width: 85%; margin:auto; background-color: white;">
+                    <div style="height: auto; width: 100%; margin:auto; margin-top: 20px; padding: 20px; font-size: 12pt;">
+                        投诉小妹请点击小妹头像进入界面然后选择右上角->选择匿名举报即可,收到举报后我们会马上展开调查。
+                        <div onclick="hideReporGirl()" class="aui-font-size-14 " style="height:40px; margin-top:20px; padding-top:5px; margin-left:auto; margin-right:auto; width:100%; text-align: center; color: white !important; background-color:#A86ACE; border: 1px solid #A86ACE; border-radius: 10px;">我知道了</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/vue.js"></script>
+<script type="text/javascript" src="../script/toast.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/iconfont_my.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+        pullRefresh();
+        //用户信息
+        var my = new Vue({
+            el: '#my',
+            data: {
+                it: []
+            },
+            mounted: function() {
+                this.add(); //初始化
+                //登入登出检测
+                LoginOut(function() {
+                    my.add();
+                }, function() {
+                    location.reload();
+                });
+                APP.bindEvent();
+                setInterval(function() {
+                    $api.get('my', function(json) {
+                        my.it.canorder = json.canorder;
+                    });
+                }, 2500);
+            },
+            methods: {
+                add: function() {
+                    $api.get('my', function(json) {
+                        if (json.realviptime) {
+                            document.getElementById("viptime").value = '会员到期截止到' + json.realviptime;
+                        }
+
+                        my.it = json;
+                        //邀请文案
+                        $api.setStorage('kouling', json.invite_text);
+                        //邀请网址
+                        $api.setStorage('invite', json.invite_url);
+                    }, function(err) {
+
+                        if (err.code == -1) {
+                            $api.rmStorage('token');
+                        }
+                    });
+                },
+                //复制邀请文案
+                invite: function() {
+                    var clipBoard = api.require('clipBoard');
+                    clipBoard.set({
+                        value: my.it.invite_text
+                    }, function(ret, err) {
+                        if (ret && ret.status) {
+                            new auiToast().success({
+                                title: '复制成功'
+                            });
+                        }
+                    });
+                }
+            }
+        });
+        api.addEventListener({
+            name: 'reload'
+        }, function(ret, err) {
+            if (ret) {
+                window.location.reload();
+            }
+        });
+    }
+
+    function qun() {
+        $api.get('app/qunkey', function(key) {
+            location.href = 'mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D' + key;
+        });
+    }
+
+    function showReportGirl() {
+        document.getElementById("divReportGirl").style.display = "block";
+    }
+
+    function hideReporGirl() {
+        document.getElementById("divReportGirl").style.display = "none";
+    }
+
+    function openKeFu() {
+        $api.post('my/kefu_autosend', {
+            uid: 35222
+        }, function() {})
+        APP.openWin('chat', {
+            uid: 35222,
+            username: '平台客服'
+        }, true);
+    }
+</script>
+
+</html>

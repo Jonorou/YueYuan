@@ -1,0 +1,117 @@
+<widget id="A6029046659914" security="false" version="0.0.1">
+
+	<name>悦缘</name>
+
+	<description/>
+
+	<author email="developer@apicloud.com" href="http://www.mmyya.com">老罗</author>
+
+	<content src="index.html"/>
+
+	<access origin="*"/>
+
+	<preference name="windowBackground" value="#fef6fe"/>
+
+	<preference name="hScrollBarEnabled" value="false"/>
+
+	<preference name="vScrollBarEnabled" value="false"/>
+
+	<preference name="autoLaunch" value="true"/>
+
+	<preference name="fullScreen" value="false"/>
+
+	<preference name="autoUpdate" value="false"/>
+
+	<preference name="smartUpdate" value="true"/>
+
+	<preference name="debug" value="false"/>
+
+	<preference name="urlScheme" value="huanhuandaba"/>
+
+	<preference name="softInputMode" value="resize"/>
+
+	<preference name="statusBarAppearance" value="true"/>
+
+	<preference name="checkSslTrusted" value="false"/>
+
+	<preference name="appCertificateVerify" value="false"/>
+
+	<preference name="customRefreshHeader" value="UIPullRefreshFlash"/>
+
+	<permission name="record"/>
+
+	<permission name="location"/>
+
+	<permission name="readPhoneState"/>
+
+	<permission name="camera"/>
+
+	<permission name="fileSystem"/>
+
+	<permission name="internet"/>
+
+	<permission name="microphone"/>
+
+	<feature name="UIPullRefreshFlash"/>
+
+	<feature name="UISearchBar"/>
+
+	<feature name="mam"/>
+
+	<feature name="trans"/>
+
+	<feature name="FNScanner"/>
+
+	<feature name="shareAction"/>
+
+	<feature name="dialogBox"/>
+
+	<feature name="clipBoard"/>
+
+	<feature name="FNImageClip"/>
+
+	<feature name="UIChatBox"/>
+
+	<feature name="imageBrowser"/>
+
+	<feature name="webBrowser"/>
+
+	<feature name="FNRecordMp3"/>
+
+	<feature name="wx">
+
+		<param name="urlScheme" value="wx57c44953de16b49d"/>
+
+		<param name="apiKey" value="wx57c44953de16b49d"/>
+
+		<param name="apiSecret" value="cfcada26a1b93c1baaa8fa2e46b2a607"/>
+
+	</feature>
+
+	<feature name="wxPay">
+
+		<param name="urlScheme" value="wx57c44953de16b49d"/>
+
+		<param name="apiKey" value="wx57c44953de16b49d"/>
+
+		<param name="apiSecret" value="cfcada26a1b93c1baaa8fa2e46b2a607"/>
+
+	</feature>
+
+	<feature name="aliPayPlus">
+
+		<param name="urlScheme" value="AliPayPlusA6016478445500"/>
+
+	</feature>
+
+	<feature name="ajpush">
+
+		<param name="app_key" value="fc1c53b3b5dd360dd3317ad4"/>
+
+		<param name="channel" value="all"/>
+
+	</feature>
+
+	<meta-data name="com.baidu.lbsapi.API_KEY" value="NRMDaLGtlKwItxA9i5epDlcvg2o63uvA"/>
+
+</widget>

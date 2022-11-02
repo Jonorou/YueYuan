@@ -1,0 +1,118 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>朋友圈</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style type="text/css">
+    body{background-color:transparent;}
+    .aui-content{position:fixed;bottom: 0;width:100%;z-index:99}
+    .aui-list .aui-list-item-media {width: 2.5rem;}
+    .aui-card-list-header .aui-icon-close{position:absolute;right:0;padding: 0 0.75rem}
+    .aui-card-list-content{max-height: 60vh;overflow-y:scroll;}
+    </style>
+</head>
+<body>
+    <div class="aui-mask aui-mask-in" tapmode onclick="api.closeFrame()"></div>
+    <section class="aui-content" id="app" v-cloak>
+        <div class="aui-card-list aui-margin-b-0">
+            <div class="aui-card-list-header aui-border-b" style="position:relative">
+                <h2 class="aui-text-center" style="width:100%">评论</h2>
+                <i tapmode onclick="api.closeFrame()" class="aui-iconfont aui-icon-close aui-font-size-20"></i>
+            </div>
+            <div class="aui-card-list-content">
+                <ul class="aui-list aui-list-noborder aui-media-list">
+                    <li class="aui-list-item" v-for="v in it" :key="v.id">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media">
+                                <img src="../image/lazloding.png" class="aui-img-round" :data-echo="APP.getImgUrl(v.user.avatar)" onerror="this.src='../image/user_header.jpg'"/>
+                            </div>
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title" v-text="v.user.username"></div>
+                                    <div class="aui-list-item-right" v-text="APP.dateFormat(v.createtime)"></div>
+                                </div>
+                                <div class="aui-list-item-text aui-text-default" v-text="v.content"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <!-- <p class="aui-gird-lable aui-margin-t-10 aui-text-center" v-text="loader"></p> -->
+            </div>
+            <div class="aui-card-list-footer aui-border-t">
+                <div class="aui-searchbar" style="height:auto">
+                    <div class="aui-searchbar-input aui-border-radius">
+                        <i class="aui-iconfont aui-icon-writefill"></i>
+                        <input type="search" v-model="content" placeholder="请输入评论内容...">
+                    </div>
+                    <button type="button" class="aui-btn aui-btn-danger" tapmode @click="add()" :disabled="disabled" style="border-radius:1rem">提交</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/lib/api.js" ></script>
+<script type="text/javascript" src="../script/lib/app.js"></script>
+<script type="text/javascript" src="../script/lib/vue.js"></script>
+<script type="text/javascript" src="../script/lib/echo.js"></script>
+<script type="text/javascript">
+apiready = function() {
+    var vm = new Vue({
+    		el: '#app',
+    		data: {
+            it: [],
+            loader: '正在加载更多...',
+            page: 1,
+            id: api.pageParam.id,
+            content: '',
+            disabled: false,
+        },
+    		created: function(){
+            this.list();
+            APP.loadMore(function(){
+                vm.list();
+            });
+        },
+    		mounted: function(){
+            this.$nextTick(function(){
+                api.parseTapmode();
+            });
+        },
+        updated: function(){
+            echo.init({offset: 500, throttle: 0});
+        },
+    	methods: {
+            list: function(){
+                $api.get('app/feeds_comment', {page: this.page, id:this.id}, function(data){
+                    vm.it = vm.it.concat(data);
+                    vm.page++;
+                    if(data.length === 0) vm.loader = '已到底部', APP.loadMore();
+                });
+            },
+            add: function(){
+                if(this.content == '') return false;
+                this.disabled = true;
+                $api.post('my/feeds_comment', {content: this.content, id:this.id}, function(data){
+                    APP.toast('success', '评论成功', function(){
+                        vm.it = vm.it.concat(data);
+                        vm.content = '';
+                        vm.disabled=false;
+                    });
+                }, function(data){
+                    APP.toast('fail', data.msg, function(){
+                        vm.disabled=false;
+						if(data.code === -1){
+							APP.openWin('login');
+							api.closeFrame();
+						}
+                    });
+                });
+            }
+        },
+    });
+};
+</script>
+</html>

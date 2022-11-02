@@ -1,0 +1,37 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>公共window</title>
+    <link rel="stylesheet" type="text/css" href="css/aui.css" />
+</head>
+<body>
+    <header id="header" class="aui-bar aui-bar-nav aui-bar-light">
+        <a class="aui-pull-left aui-btn" tapmode onclick="api.closeWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title"></div>
+    </header>
+</body>
+<script type="text/javascript" src="script/lib/api.js" ></script>
+<script type="text/javascript" src="script/lib/app.js" ></script>
+<script type="text/javascript">
+apiready = function(){
+    var header = $api.byId('header');
+    if(api.pageParam.left === false){
+        api.addEventListener({name: 'keyback'});
+    }else{
+        header = $api.dom(header, 'div.aui-title');
+    }
+    $api.text(header, api.pageParam.title);
+    var params = {rect: {header: ['header']}};
+    api.pageParam.bounces !== undefined && (params['bounces'] = api.pageParam.bounces);
+    api.pageParam.reload !== undefined && (params['reload'] = api.pageParam.reload);
+    api.pageParam.frame ? APP.openFrame(api.pageParam.frame, params) : APP.openFrame(params);
+    api.parseTapmode();
+};
+</script>
+</html>
